@@ -26,6 +26,14 @@ urlpatterns =i18n_patterns(
     path('admin/', admin.site.urls),
     path('admin', views.admin),
     path('', views.home, name='home'),
+    path('loginpage/', views.loginpage, name='loginpage'),
+    path('register/', views.register_user, name='register_user'),
+    path('logout/', views.logout_user, name='logout_user'),
+    path('regpage/', views.regpage, name='regpage'),
+    path('login/', views.login_user, name='login_user'),
+    path('userfeed/', views.userfeed, name='userfeed'),
+    path('profile/', views.profile, name='profile'),
+    path('add_to_feed/', views.add_to_feed, name='add_to_feed'),
     
 )+ static(
     settings.STATIC_URL,
