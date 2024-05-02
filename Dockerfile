@@ -16,18 +16,18 @@ COPY . /myproject
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-#RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /myproject
+RUN adduser -u 5678 --disabled-password --gecos "" app09user && chown -R appuser /myproject
 
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+# RUN adduser \
+#     --disabled-password \
+#     --gecos "" \
+#     --home "/nonexistent" \
+#     --shell "/sbin/nologin" \
+#     --no-create-home \
+#     --uid "${UID}" \
+#     appuser
 
-    
+
 USER appuser
 
 COPY requirements.txt .

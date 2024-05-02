@@ -30,7 +30,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-#CSRF_TRUSTED_ORIGINS = ['https://memorypostgre-vgzdxca4.b4a.run']
+CSRF_TRUSTED_ORIGINS = ['https://memorypostgre-vgzdxca4.b4a.run' , 'https://*.127.0.0.1']
+
+#CSRF_TRUSTED_ORIGINS = ['*']
+
 
 # Application definition
 
