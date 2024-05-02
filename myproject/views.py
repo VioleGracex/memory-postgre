@@ -96,12 +96,12 @@ def register_user(request):
 
         try:
             # Check if the username already exists
-            if CustomUser.objects.filter(username=username).exists():
+            if User.objects.filter(username=username).exists():
                 messages.error(request, "Username already exists. Please choose a different username.")
                 return redirect('regpage')
 
             # Create the user
-            user = CustomUser.objects.create_user(username=username, email=email, password=password)
+            user = get_user_model().objects.create_user(username=username, email=email, password=password)
             user.first_name = first_name  # Save the first name to the CustomUser model
             user.last_name = last_name    # Save the last name to the CustomUser model
             user.save()  # Save the user object
@@ -119,18 +119,9 @@ def login_user(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Check if the user exists in the database
-        """ try:
-            user = CustomUser.objects.get(username=username)
-        except CustomUser.DoesNotExist:
-            messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('loginpage') """
-
-        # Authenticate the user
         user = authenticate(request, username=username, password=password)
-        
+        print (user)
         if user is not None:
-            # Login the user
             login(request, user)
             return redirect('userfeed')  # Redirect to user feed page after successful login
         else:
