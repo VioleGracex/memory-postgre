@@ -1,0 +1,66 @@
+<!-- base.html -->
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Other head content here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Link to CSS file -->
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    
+</head>
+<body>
+    <!-- Theme toggle buttons -->
+    <div class="theme-toggle-container">
+        <button id="lightModeToggle" class="theme-toggle black-mode">
+            <i class="fas fa-sun text-black"></i> 
+        </button>
+
+        <button id="darkModeToggle" class="theme-toggle white-mode">
+            <i class="fas fa-moon text-white"></i>
+        </button>
+    </div>
+
+    <!-- Language selector -->
+    <div class="language-selector-container">
+        {% include 'language_selector.html' %}
+    </div>
+
+    <!-- Your common HTML content here -->
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- JavaScript to toggle theme -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Set the theme to dark mode
+            document.body.classList.add('body-black');
+        } else {
+            // Set the theme to light mode
+            document.body.classList.add('body-white');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var lightModeToggle = document.getElementById('lightModeToggle');
+            var darkModeToggle = document.getElementById('darkModeToggle');
+            var body = document.body;
+
+            lightModeToggle.addEventListener('click', function() {
+                body.className = ''; 
+                document.body.classList.add('body-black');
+            });
+    
+            darkModeToggle.addEventListener('click', function() {
+                body.className = ''; 
+                document.body.classList.add('body-white');
+            });
+        });
+    </script>
+</body>
+</html>

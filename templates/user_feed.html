@@ -1,0 +1,272 @@
+<!-- user_feed.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% csrf_token %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "User Feed" %}</title>
+    <!-- Link static CSS file -->
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <!-- Link Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Include Emoji Picker library -->
+    <link href="https://cdn.jsdelivr.net/npm/emoji-picker-element@latest/dist/index.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@latest/dist/index.js" defer></script>
+</head>
+
+<body>
+    <!-- profileHeader -->
+    <div class="custom-container rounded-lg mx-auto py-12 border border-gray-300 rounded-lg">
+        <div class="profile-header" style="background-image: url('{% if user.cover %}{{ user.cover.url }}{% else %}{% static 'cover_image.jpg' %}{% endif %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+        position: relative;">
+            <!-- Profile avatar -->
+            <div class="profile-avatar align-center">
+                {% if user.profile_picture %}
+                    <a href="{% url 'profile' %}">
+                        <img src="{{ user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
+                    </a>            
+                {% else %}
+                    <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}">
+                {% endif %}
+            </div>
+        </div>
+        <!-- User information -->
+        <div class="mt-24 profile-container">
+            <!-- Profile name -->
+            <div class="profile-name">
+                <span class="ml-20 text-lg">
+                    {% if user.first_name or user.last_name %}
+                        <a href="{% url 'profile'%}">
+                    {% endif %}
+                    {{ user.first_name|default:"" }} {{ user.last_name|default:"" }}{% if not user.first_name or not user.last_name %}{% trans 'Placeholder' %}{% endif %}
+                    {% if user.first_name or user.last_name %}
+                        </a>
+                    {% endif %}
+                </span>
+            </div>
+            
+            <!-- Logout button -->
+            <form id="logout-form" method="POST" action="{% url 'logout_user' %}">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center mr-4 text-red-500 hover:text-red-700 ml-auto">
+                    <i class="fas fa-sign-out-alt mr-1"></i> <!-- Font Awesome logout icon -->
+                    {% trans "Logout" %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- quick post area -->
+    <div class="container rounded-lg mx-auto py-12">
+        <div class="custom-container rounded-lg" style="max-width: 600px;">
+            <form method="POST" action="{% url 'add_to_feed' %}" enctype="multipart/form-data" class="rounded-lg p-4">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <div class="relative">
+                    <!-- Text area with location and content -->
+                    <div class="relative ml-3 border-b border-gray-300">
+                        <i class="absolute top-2 left-3 fas fa-map-marker-alt"></i>
+                        <input type="text" class="w-full pl-8 bg-transparent focus:outline-none" name="location" id="locationInput" placeholder="{% trans 'No location' %}">
+                        <textarea name="content" id="contentTextArea" class="w-full bg-transparent px-3 py-2 border-0 focus:outline-none mt-4" rows="8" placeholder="{% trans 'Add to feed...' %}"></textarea>
+                        <!-- Emoji button -->
+                        <button type="button" id="emojiButton" class="absolute top-2 right-3 focus:outline-none">
+                            😀 <!-- Default emoji icon -->
+                        </button>
+                    </div>
+                    <!-- Image Belt -->
+                    <div class="image-belt mt-3" id="mediabelt">
+                        <!-- Uploaded images will be displayed here -->
+                    </div>
+                </div>
+                <!-- Buttons for adding media -->
+                <div class="mt-4 flex justify-between">
+                    <div id="page_add_media" class="page_add_media">
+                        <div class="media_selector clear_fix">
+                            <!-- Camera button -->
+                            <button type="button" class="ms_item ms_item_photo _type_photo mr-4" tabindex="0" data-title="{% trans 'Photo' %}" aria-label="{% trans 'Photo' %}" role="link" id="uploadMediaBtn">
+                                <i class="fas fa-camera"></i>
+                                <span class="blind_label">{% trans 'Photo' %}</span>
+                            </button>
+                            <!-- Location/map button -->
+                            <button type="button" class="ms_item ms_item_location _type_location  mr-4" tabindex="0" data-title="{% trans 'Location' %}" aria-label="{% trans 'Location' %}" role="link" onclick="openMapPopup()">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="blind_label">{% trans 'Location' %}</span>
+                            </button>
+                            <!-- Add other media buttons here -->
+                        </div>
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        {% trans "Add to Feed" %}
+                    </button>
+                </div>
+                <!-- Hidden map popup -->
+                <div id="mapPopup" class="hidden mt-9" tabindex="0">
+                    {% include 'yandex_map_popup.html' %}
+                </div>
+                <!-- Input to upload images -->
+                <input style="display: none;" id="mediaInput" type="file" name="images" accept="image/*" multiple>
+            </form> 
+        </div>  
+    </div>
+
+    <!-- Display user's posts -->       
+    <div class="rounded-lg mx-auto py-12">                       
+        {% for post in user_posts %}
+            <div class="custom-container memory mt-9">
+                <!-- Profile information -->
+                <div class="profile-info flex justify-start mb-4">
+                    <div>
+                        {% if post.user.profile_picture %}
+                            <img src="{{ post.user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="small-profile-avatar">
+                        {% else %}
+                            <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
+                        {% endif %}
+                    </div>
+                    <div class="">
+                        {{ post.user.first_name|default:"" }} {{ post.user.last_name|default:"" }}
+                        <div>
+                            {% if post.location %}
+                                <p class="location text-white">{% trans 'Location' %}: {{ post.location }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="memory-header ml-auto">
+                        <p class="text-sm text-gray-500">{{ post.created_at }}</p>
+                    </div>
+                </div>
+                <!-- Memory content -->
+                <div class="memory-content">
+                    {% if post.text %}
+                        <p>{{ post.text }}</p>
+                    {% endif %}
+                    <div class="media">
+                        {% for image in post.image_set.all %}
+                            <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}">
+                        {% endfor %}
+                        {% for video in post.video_set.all %}
+                            <video controls>
+                                <source src="{{ video.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+            
+    <script>
+        function openMapPopup() {
+            var mapPopup = document.getElementById("mapPopup");
+            mapPopup.classList.toggle("hidden");
+            // Additional JavaScript logic to handle opening and closing the map popup
+        }
+         // Function to open emoji picker
+        document.getElementById('emojiButton').addEventListener('click', function() {
+            var textarea = document.getElementById('contentTextArea');
+            var emojiPicker = new EmojiPicker();
+            emojiPicker.addEventListener('emoji-click', function(event) {
+                textarea.value += event.detail.unicode;
+            });
+            emojiPicker.showPicker(document.getElementById('emojiButton'));
+            
+        });
+    </script>
+    
+   <!-- JavaScript to handle media uploading and memory saving -->
+    <script>  
+        // Function to handle adding images and videos to the hidden input fields
+        function addFilesToInput(inputId, containerId) {
+            var fileNames = [];
+            var fileElements = document.querySelectorAll(containerId + ' .media-item');
+            fileElements.forEach(function(file) {
+                fileNames.push(file.getAttribute('data-file-name'));
+            });
+            document.getElementById(inputId).value = fileNames.join(',');
+        }
+
+        // Event listener for form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            addFilesToInput('images', '#media'); // Add image names to hidden input before form submission
+            addFilesToInput('videos', '#videoBelt'); // Add video names to hidden input before form submission
+        });
+        // Function to handle media uploading
+        function uploadMedia() {
+            document.getElementById('images').click();
+        }
+
+        // Function to display uploaded media (image or video)
+        function displayMedia(file) {
+            var container = document.createElement('div');
+            container.classList.add('media-item-container');
+
+            // Check if the file is an image
+            if (file.type.startsWith('image/')) {
+                var img = document.createElement('img');
+                img.classList.add('media-item');
+                img.file = file;
+                img.src = URL.createObjectURL(file);
+
+                // Create the full-screen button for images
+                var fullScreenBtn = document.createElement('button');
+                fullScreenBtn.classList.add('full-screen-btn');
+                fullScreenBtn.innerHTML = '&#x26F6;'; // Unicode arrow for full-screen
+                fullScreenBtn.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default behavior (i.e., redirection)
+                    img.requestFullscreen(); // Display image in full-screen
+                });
+
+                container.appendChild(img);
+                container.appendChild(fullScreenBtn);
+            }
+            // Check if the file is a video
+            else if (file.type.startsWith('video/')) {
+                var video = document.createElement('video');
+                video.classList.add('media-item');
+                video.file = file;
+                video.src = URL.createObjectURL(file);
+                video.controls = true; // Show video controls
+
+                container.appendChild(video);
+            }
+
+            // Append the container to the media belt
+            document.getElementById('mediabelt').insertBefore(container, document.getElementById('uploadBtnContainer'));
+        }
+
+        // Event listener for the upload media button
+        document.getElementById('uploadMediaBtn').addEventListener('click', function () {
+            document.getElementById('mediaInput').click();
+        });
+
+        // Event listener for media input change
+        document.getElementById('mediaInput').addEventListener('change', function () {
+            var files = this.files;
+            // Iterate over selected files and display media (image or video)
+            for (var i = 0; i < files.length; i++) {
+                displayMedia(files[i]);
+            }
+        });
+
+        // Event listener for "Cancel" button
+        document.getElementById('cancelBtn').addEventListener('click', function () {
+            // Clear content and media
+            document.getElementById('contentInput').value = '';
+            document.getElementById('locationInput').value = '';
+            document.getElementById('mediabelt').innerHTML = '';
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

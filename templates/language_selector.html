@@ -1,0 +1,22 @@
+{% comment %} language_selector.html {% endcomment %}
+{% load i18n %}
+<div class="language-selector">
+    <a href="#" onclick="changeLanguage('en')" role="button">{% trans "English" %}</a>
+    |
+    <a href="#" onclick="changeLanguage('ru')" role="button">{% trans "Russian" %}</a>
+</div>
+
+<script>
+    function changeLanguage(language) {
+        var currentUrl = window.location.href;
+        
+        // Get the current language code from the URL
+        var languageCode = currentUrl.split('/')[3];
+        
+        // Replace the language code in the URL
+        var newUrl = currentUrl.replace('/' + languageCode + '/', '/' + language + '/');
+        
+        // Navigate to the new URL
+        window.location.href = newUrl;
+    }
+</script>
