@@ -1,0 +1,269 @@
+/* #region global */
+body {
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+}
+/* Black theme */
+.body-black {
+    background-color: #141414;
+    color: #fff; /* Text color */
+}
+
+/* White theme */
+.body-white {
+    background-color: #EDEEF0;
+    color: #000; /* Text color */
+}
+
+.fontExceptionBlack
+{
+    color: #000; /* Text color */
+}
+/* #endregion */
+/* #region auth */
+.user_card {
+    width: 350px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+}
+/* #endregion */
+/* #region user_feed.html */
+
+.profile-header {
+    background-image: none; /* Remove background image */
+    background-size: cover;
+    background-position: center;
+    height: 300px; /* Adjust height as needed */
+    position: relative;
+}
+
+.profile-avatar {
+    width: 150px; /* Adjust profile image size */
+    height: 150px; /* Adjust profile image size */
+    border-radius: 50%; /* Make profile image circular */
+    position: absolute;
+    bottom: -75px; /* Adjust position to center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    border: 3px solid #fff; /* Add white border */
+}
+
+.profile-avatar-memory {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    border-radius: 50%; /* Ensure the avatar image is circular */
+    margin-right: 10px; /* Add some space between the avatar and the name */
+}
+
+
+.profile-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-name {
+    flex: 1; /* Let the name span take up remaining space */
+    text-align: center;
+}
+
+.ms_item:hover .blind_label {
+    display: block;
+}
+
+.blind_label {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.custom-container {
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 1px solid #707070; /* Add border properties */
+}
+
+.body-black .custom-container {
+    background-color: #222222;
+    color: #fff; /* Text color for black theme */
+    border: 1px solid #444242; /* Add border properties */
+}
+
+.body-white .custom-container {
+    background-color: #FFFFFF;
+    color: #000; /* Text color for white theme */
+    border: 1px solid #d4d2d2; /* Add border properties */
+}
+
+/* #endregion */
+
+/* #region memory */
+.memory {
+    width: 100%; /* Adjust the width as needed */
+    max-width: 600px; /* Set a maximum width for consistency */
+    min-height: 100px;
+    max-height: 800px;
+    margin-bottom: 20px; /* Add some space between memories */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.memory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.memory-content {
+    margin-top: 10px;
+}
+
+.location {
+    font-size: 12px;
+    color: #666;
+}
+
+.media img,
+.media video {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+/* #endregion */
+
+/* #region base.html */
+.theme-toggle-container {
+    display: flex; /* Use flexbox to align buttons horizontally */
+    align-items: center; /* Center align items vertically */
+}
+
+
+.theme-toggle-container .theme-toggle {
+    margin-right: 10px; /* Adjust spacing between buttons */
+}
+/* #endregion */
+
+/* #region create_memory.html */
+
+.media-item-container {
+    position: relative;
+    display: inline-block; /* Ensure media items stack horizontally */
+}
+
+.image-belt {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.media-item {
+    display: inline-block; /* Ensure media items are displayed in a row */
+    margin-right: 10px; /* Add some space between media items */
+    margin-top: 20px;
+    max-height: 200px; /* Limit the height of media items */
+    object-fit: cover; /* Crop images to fit their container */
+    border: 1px solid #ccc; /* Add border to distinguish media items */
+}
+
+
+.full-screen-btn {
+    position: absolute;
+    background: transparent;
+    bottom: 1px; /* Adjust bottom position as needed */
+    right: 1px; /* Adjust right position as needed */
+    color: blue;
+    font-size: 24px; 
+    width: 40px; 
+    height: 40px; 
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.upload-media-btn {
+    background-color: #2a323b;
+    border-color: #303c49;
+}
+
+.upload-media-btn:hover {
+    background-color: #303c49;
+    border-color: #303c49;
+}
+
+.upload-media-btn:focus,
+.upload-media-btn.focus {
+    box-shadow: 0 0 0 0.2rem rgba(48, 58, 68, 0.5);
+}
+
+.upload-icon {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #000;
+    text-align: center;
+    line-height: 180px; /* Adjusted to match the container height */
+    font-size: 124px; /* Increase font size for the + symbol */
+}
+/* #endregion */
+
+
+/* #region homepage.html */
+.language-selector-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999; /* Ensure it appears on top of other content */
+}
+
+/* Styles for light mode */
+.body-white .language-selector-container {
+    color: black; /* Black font color for light mode */
+}
+
+/* Styles for dark mode */
+.body-black .language-selector-container {
+    color: white; /* White font color for dark mode */
+}
+
+
+/* Common styles for both light and dark modes */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+/* Styles for light mode */
+.body-white .theme-toggle i.fa-moon {
+    display: none;
+}
+
+/* Styles for dark mode */
+.body-black .theme-toggle i.fa-sun {
+    display: none;
+}
+/* #endregion */

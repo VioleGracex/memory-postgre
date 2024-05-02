@@ -20,7 +20,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.staticfiles.urls import static
 
 from django.conf import settings
-from . import views, fake_user
+from . import views
 
 urlpatterns =i18n_patterns(
     path('admin/', admin.site.urls),

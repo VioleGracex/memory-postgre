@@ -1,6 +1,6 @@
 # views.py
 from django.shortcuts import render, redirect
-from utils.user_social_utils import get_user_social_info, vk_auth
+#from utils.user_social_utils import get_user_social_info, vk_auth
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.contrib import messages
