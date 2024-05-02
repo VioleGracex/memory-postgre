@@ -1,239 +1,97 @@
-# views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
-from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-from .models import CustomUser, UserFeed, Memory, Image, Video
-from django.contrib.auth import get_user_model
+#models.py
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
-
-#region Utility Functions
-
-def login_user(request, user_name):
-    try:
-        user = CustomUser.objects.get(username=user_name)
-    except CustomUser.DoesNotExist:
-        try:
-            user = CustomUser.objects.create(username=user_name)
-        except Exception as e:
-            messages.error(request, f"Error creating user: {e}")
-            return redirect('home')
-
-    request.session['auto_login'] = True
-    login(request, user)
-    return redirect('userfeed')
-
-#endregion
-
-#region Views
-
-# Region: Home and Authentication
-
-def home(request):
-    return render(request, 'home.html')
-
-def loginpage(request):
-    context = {}
-    return render(request, 'accounts/login.html', context)
-
-def regpage(request):
-    context = {}
-    return render(request, 'accounts/reg.html', context)
-
-def admin(request):
-    return render(request, 'admin.html')
-
-def reg_page(request):
-    context = {}
-    return render(request, 'accounts/reg.html', context)
-
-def login_page(request):
-    return render(request, 'accounts/login.html')
-
-@login_required  
-def userfeed(request):
-    user = request.user  # Access the authenticated user object
-    #user_posts = user.memory_set.all()  # Assuming you have a related name 'memory_set' for the user's posts
-    return render(request, 'user_feed.html', {'user': user})
-
-@login_required 
-def profile(request):
-    user = request.user  # Access the authenticated user object
-    return render(request, 'profile.html')
-
-User = get_user_model()
-
-def register_user(request):
-    if request.method == 'POST':
-        username = request.POST.get('username','')
-        email = request.POST.get('email','')
-        password = request.POST.get('password','')
-        confirm_password = request.POST.get('confirm_password','')
-        first_name = request.POST.get('first_name', '')  # Get the first name field
-        last_name = request.POST.get('last_name', '')
-
-        # Validate the password
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            # Password validation failed, display error message
-            messages.error(request, "\n".join(e))
-            return redirect('regpage')
-
-        # Check if the password is the same as the username
-        if password == username:
-            messages.error(request, "Password cannot be the same as the username.")
-            return redirect('regpage')
-
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('regpage')
-
-        try:
-            # Check if the username already exists
-            if User.objects.filter(username=username).exists():
-                messages.error(request, "Username already exists. Please choose a different username.")
-                return redirect('regpage')
-
-            # Create the user
-            user = get_user_model().objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name  # Save the first name to the CustomUser model
-            user.last_name = last_name    # Save the last name to the CustomUser model
-            user.save()  # Save the user object
-
-            # Redirect the user to the login page
-            return redirect('loginpage')
-        except Exception as e:
-            messages.error(request, f"Error creating user: {e}")
-            return redirect('regpage')
-    else:
-        return redirect('regpage')
-
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
-        print (user)
-        if user is not None:
-            login(request, user)
-            return redirect('userfeed')  # Redirect to user feed page after successful login
-        else:
-            messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('loginpage')  # Redirect back to login page if login fails
-    else:
-        return render(request, 'accounts/login.html')
-
-def logout_user(request):
-    logout(request)
-    return redirect('home')  # Redirect to the home page after logout
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    cover_image = models.ImageField(upload_to='cover_images/', null=True, blank=True)
+    bio = models.TextField(blank=True)
+    registration_method = models.CharField(max_length=20, choices=[('social', 'Social Network'), ('normal', 'Normal Registration')])
+    registration_method = models.CharField(max_length=20, choices=[('social', 'Social Network'), ('normal', 'Normal Registration')])
+    last_login = models.DateTimeField(null=True, blank=True)
+    email_verified = models.BooleanField(default=False)
+    two_factor_authentication = models.BooleanField(default=False)
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        related_name='customuser_groups',  # Unique related_name for groups
+        related_query_name='user',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name='customuser_user_permissions',  # Unique related_name for user_permissions
+        related_query_name='user',
+    )
+class Memory(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    text = models.TextField()
+    likes = models.ManyToManyField(CustomUser, related_name='memory_likes')
+    comments = models.ManyToManyField('Comment', related_name='memory_comments')
+    created_at = models.DateTimeField(default=timezone.now)  # Set default value here
+    updated_at = models.DateTimeField(auto_now=True)
+    images = models.ManyToManyField('Image', related_name='memory_images')
+    videos = models.ManyToManyField('Video', related_name='memory_videos')
     
-#endregion
+    def __str__(self):
+        return f"Memory by {self.user.username} at {self.created_at}"
 
 
-#region User Feed and Profile
+class Image(models.Model):
+    memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='memory_images/')
 
-@login_required
-def add_to_feed(request):
-    if request.method == 'POST':
-        user = request.user  # Get the current user
-        content = request.POST.get('content')
-        location = request.POST.get('location', 'Default location')
-        images = request.FILES.getlist('images')  # Corrected to match the form input name
-        videos = request.FILES.getlist('videos')
-
-        if content:
-            # Create a new Memory object and associate it with the user
-            memory = Memory.objects.create(user=user, text=content, location=location)
-            
-            # Add images to the memory if they exist
-            for image in images:
-                Image.objects.create(memory=memory, image=image)
-            
-            # Add videos to the memory if they exist
-            for video in videos:
-                Video.objects.create(memory=memory, video=video)
-            
-            user_feed = UserFeed.objects.get_or_create(user=user)[0]
-            user_feed.memories.add(memory)
-            messages.success(request, 'Memory added to your feed successfully.')
-            return redirect('userfeed')
-        else:
-            messages.error(request, 'Content is required.')
-            return redirect('userfeed')  # Redirect to user feed page if content is missing
-    else:
-        messages.error(request, 'Method not allowed.')
-        return redirect('userfeed')  # Redirect to user feed page for GET requests 
-
-#endregion
+    def __str__(self):
+        return f"Image for Memory: {self.memory.id}"
 
 
+class Video(models.Model):
+    memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+    video = models.FileField(upload_to='memory_videos/')
 
-""" def add_to_feed(request):
-    if request.method == 'POST':
-        form = MemoryForm(request.POST, request.FILES)  # Include request.FILES to handle uploaded files
-        if form.is_valid():
-            user_id = form.cleaned_data['user_id']
-            content = form.cleaned_data['content']
-            location = form.cleaned_data['location']
-            images = request.FILES.getlist('images')  # Get list of uploaded images
-            videos = request.FILES.getlist('videos')  # Get list of uploaded videos
+    def __str__(self):
+        return f"Video for Memory: {self.memory.id}"
 
-            # Create Memory object
-            memory = Memory.objects.create(user_id=user_id, text=content, location=location)
 
-            # Save images
-            for image in images:
-                Image.objects.create(memory=memory, image=image)
+class Comment(models.Model):
+    memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
 
-            # Save videos
-            for video in videos:
-                Video.objects.create(memory=memory, video=video)
+    def __str__(self):
+        return f"Comment by {self.user.username} on Memory: {self.memory.id}"
 
-            # Optionally, you can add a success message here
-            return redirect('success_url')
-    else:
-        form = MemoryForm()
-    return render(request, 'user_feed.html', {'form': form})
- """
 
-""" def logout_view(request):
-    logout(request)
-    request.session.flush()  # Flush the session data
-    return redirect("home") """
+class UserFeed(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='user_feed')
+    memories = models.ManyToManyField(Memory, related_name='user_feed_memories')
 
-""" def signup(request, signup_data=None):
-    if request.method == 'POST' or signup_data:
-        name = request.POST.get('name') if request.method == 'POST' else signup_data.get('name')
-        email = request.POST.get('email') if request.method == 'POST' else signup_data.get('email')
-        username = request.POST.get('username') if request.method == 'POST' else signup_data.get('username')
-        password = request.POST.get('password') if request.method == 'POST' else signup_data.get('password')
+    def __str__(self):
+        return f"Feed for {self.user.username}"
 
-        if CustomUser.objects.filter(Q(username=username) | Q(email=email)).exists():
-            messages.error(request, "Username or email already exists.")
-            return redirect('home')
+    def add_memory(self, memory):
+        """
+        Method to add a memory to the user feed.
+        """
+        self.memories.add(memory)
 
+    def remove_memory(self, memory_id):
+        """
+        Method to remove a memory from the user feed.
+        """
         try:
-            user = CustomUser.objects.create(
-                name=name,
-                email=email,
-                username=username,
-                password=password,
-                # Assign other fields as needed
-            )
-            messages.success(request, "Account created successfully. You can now log in.")
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('userfeed')
-        except Exception as e:
-            messages.error(request, f"Error creating account: {e}")
-            return redirect('home')
+            memory = Memory.objects.get(pk=memory_id)
+            self.memories.remove(memory)
+            memory.delete()
+            return True
+        except Memory.DoesNotExist:
+            return False
 
-    else:
-        return redirect('home') """
