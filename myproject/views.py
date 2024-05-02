@@ -96,12 +96,12 @@ def register_user(request):
 
         try:
             # Check if the username already exists
-            if User.objects.filter(username=username).exists():
+            if CustomUser.objects.filter(username=username).exists():
                 messages.error(request, "Username already exists. Please choose a different username.")
                 return redirect('regpage')
 
             # Create the user
-            user = get_user_model().objects.create_user(username=username, email=email, password=password)
+            user = CustomUser.objects.create_user(username=username, email=email, password=password)
             user.first_name = first_name  # Save the first name to the CustomUser model
             user.last_name = last_name    # Save the last name to the CustomUser model
             user.save()  # Save the user object
