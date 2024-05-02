@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8088
+    volumes:
+      - .:/myproject
+    ports:
+      - "8088:8088"
+    depends_on:
+      - db
