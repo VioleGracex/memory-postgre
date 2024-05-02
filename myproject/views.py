@@ -120,11 +120,11 @@ def login_user(request):
         password = request.POST.get('password')
 
         # Check if the user exists in the database
-        try:
+        """ try:
             user = CustomUser.objects.get(username=username)
         except CustomUser.DoesNotExist:
             messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('loginpage')
+            return redirect('loginpage') """
 
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
