@@ -2,18 +2,26 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
-class CustomUser(AbstractUser):
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE , default=None)
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     cover_image = models.ImageField(upload_to='cover_images/', null=True, blank=True)
     bio = models.TextField(blank=True)
     registration_method = models.CharField(max_length=20, choices=[('social', 'Social Network'), ('normal', 'Normal Registration')])
-    registration_method = models.CharField(max_length=20, choices=[('social', 'Social Network'), ('normal', 'Normal Registration')])
     last_login = models.DateTimeField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     two_factor_authentication = models.BooleanField(default=False)
-    groups = models.ManyToManyField(
+
+    def __str__(self):
+        return self.user.username
+
+
+
+"""     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',
         blank=True,
@@ -28,7 +36,9 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.',
         related_name='customuser_user_permissions',  # Unique related_name for user_permissions
         related_query_name='user',
-    )
+    ) """
+
+
 class Memory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True, null=True)

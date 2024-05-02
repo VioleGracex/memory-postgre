@@ -10,11 +10,11 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
 from .models import CustomUser, UserFeed, Memory, Image, Video
 from django.contrib.auth import get_user_model
-
+from django.utils import timezone
 
 #region Utility Functions
 
-def login_user(request, user_name):
+""" def login_user(request, user_name):
     try:
         user = CustomUser.objects.get(username=user_name)
     except CustomUser.DoesNotExist:
@@ -26,7 +26,7 @@ def login_user(request, user_name):
 
     request.session['auto_login'] = True
     login(request, user)
-    return redirect('userfeed')
+    return redirect('userfeed') """
 
 #endregion
 
@@ -48,18 +48,21 @@ def regpage(request):
 def admin(request):
     return render(request, 'admin.html')
 
-def reg_page(request):
-    context = {}
-    return render(request, 'accounts/reg.html', context)
-
 def login_page(request):
     return render(request, 'accounts/login.html')
 
-@login_required  
+@login_required
 def userfeed(request):
-    user = request.user  # Access the authenticated user object
-    #user_posts = user.memory_set.all()  # Assuming you have a related name 'memory_set' for the user's posts
-    return render(request, 'user_feed.html', {'user': user})
+    # Get the current authenticated user
+    current_user = request.user
+    
+    # Retrieve the associated CustomUser instance
+    custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
+    
+    # Assuming you have a related name 'memory_set' for the user's posts in the Memory model
+    user_posts = custom_user.memory_set.all() if custom_user else None  
+    
+    return render(request, 'user_feed.html', {'custom_user': custom_user, 'user_posts': user_posts})
 
 @login_required 
 def profile(request):
@@ -70,10 +73,10 @@ User = get_user_model()
 
 def register_user(request):
     if request.method == 'POST':
-        username = request.POST.get('username','')
-        email = request.POST.get('email','')
-        password = request.POST.get('password','')
-        confirm_password = request.POST.get('confirm_password','')
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
         first_name = request.POST.get('first_name', '')  # Get the first name field
         last_name = request.POST.get('last_name', '')
 
@@ -100,11 +103,21 @@ def register_user(request):
                 messages.error(request, "Username already exists. Please choose a different username.")
                 return redirect('regpage')
 
-            # Create the user
-            user = get_user_model().objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name  # Save the first name to the CustomUser model
-            user.last_name = last_name    # Save the last name to the CustomUser model
+            # Create the default User
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.first_name = first_name  # Save the first name to the User model
+            user.last_name = last_name    # Save the last name to the User model
             user.save()  # Save the user object
+
+            # Create the associated CustomUser object
+            custom_user = CustomUser.objects.create(
+                user=user,
+                bio='', 
+                registration_method='normal',  
+                email_verified=False,  
+                two_factor_authentication=False,  
+                # Add other fields as needed
+            )
 
             # Redirect the user to the login page
             return redirect('loginpage')
@@ -113,6 +126,7 @@ def register_user(request):
             return redirect('regpage')
     else:
         return redirect('regpage')
+
 
 def login_user(request):
     if request.method == 'POST':
@@ -138,8 +152,46 @@ def logout_user(request):
 
 
 #region User Feed and Profile
-
 @login_required
+def add_to_feed(request):
+    if request.method == 'POST':
+        # Get the current authenticated user
+        current_user = request.user
+        
+        # Retrieve the associated CustomUser instance
+        custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
+        
+        # Assuming you have a related name 'memory_set' for the user's posts in the Memory model
+        if custom_user:
+            content = request.POST.get('content')
+            location = request.POST.get('location', 'Default location')
+            images = request.FILES.getlist('images')  # Corrected to match the form input name
+            videos = request.FILES.getlist('videos')
+
+            if content:
+                # Create a new Memory object and associate it with the user
+                memory = custom_user.memory_set.create(text=content, location=location)
+                
+                # Add images to the memory if they exist
+                for image in images:
+                    memory.image_set.create(image=image)
+                
+                # Add videos to the memory if they exist
+                for video in videos:
+                    memory.video_set.create(video=video)
+                
+                messages.success(request, 'Memory added to your feed successfully.')
+                return redirect('userfeed')
+            else:
+                messages.error(request, 'Content is required.')
+                return redirect('userfeed')  # Redirect to user feed page if content is missing
+        else:
+            messages.error(request, 'CustomUser not found.')
+            return redirect('userfeed')  # Redirect to user feed page if CustomUser is not found
+    else:
+        messages.error(request, 'Method not allowed.')
+        return redirect('userfeed')  # Redirect to user feed page for GET requests
+""" @login_required
 def add_to_feed(request):
     if request.method == 'POST':
         user = request.user  # Get the current user
@@ -169,7 +221,7 @@ def add_to_feed(request):
             return redirect('userfeed')  # Redirect to user feed page if content is missing
     else:
         messages.error(request, 'Method not allowed.')
-        return redirect('userfeed')  # Redirect to user feed page for GET requests 
+        return redirect('userfeed')  # Redirect to user feed page for GET requests  """
 
 #endregion
 

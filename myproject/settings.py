@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+#AUTH_USER_MODEL = "myproject.CustomUser"
 
 CSRF_TRUSTED_ORIGINS = ['https://memorypostgre-vgzdxca4.b4a.run' , 'https://*.127.0.0.1']
 

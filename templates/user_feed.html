@@ -24,16 +24,16 @@
 <body>
     <!-- profileHeader -->
     <div class="custom-container rounded-lg mx-auto py-12 border border-gray-300 rounded-lg">
-        <div class="profile-header" style="background-image: url('{% if user.cover %}{{ user.cover.url }}{% else %}{% static 'cover_image.jpg' %}{% endif %}');
+        <div class="profile-header" style="background-image: url('{% if custom_user.cover %}{{ custom_user.cover.url }}{% else %}{% static 'cover_image.jpg' %}{% endif %}');
         background-size: cover;
         background-position: center;
         height: 300px; /* Adjust height as needed */
         position: relative;">
             <!-- Profile avatar -->
             <div class="profile-avatar align-center">
-                {% if user.profile_picture %}
+                {% if custom_user.profile_picture %}
                     <a href="{% url 'profile' %}">
-                        <img src="{{ user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
+                        <img src="{{ custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
                     </a>            
                 {% else %}
                     <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}">
@@ -45,11 +45,11 @@
             <!-- Profile name -->
             <div class="profile-name">
                 <span class="ml-20 text-lg">
-                    {% if user.first_name or user.last_name %}
+                    {% if custom_user.first_name or custom_user.last_name %}
                         <a href="{% url 'profile'%}">
                     {% endif %}
-                    {{ user.first_name|default:"" }} {{ user.last_name|default:"" }}{% if not user.first_name or not user.last_name %}{% trans 'Placeholder' %}{% endif %}
-                    {% if user.first_name or user.last_name %}
+                    {{ custom_user.user.first_name|default:"" }} {{ custom_user.user.last_name|default:"" }}{% if not custom_user.user.first_name or not custom_user.user.last_name %}{% trans 'Placeholder' %}{% endif %}
+                    {% if custom_user.user.first_name or custom_user.user.last_name %}
                         </a>
                     {% endif %}
                 </span>
@@ -71,7 +71,7 @@
         <div class="custom-container rounded-lg" style="max-width: 600px;">
             <form method="POST" action="{% url 'add_to_feed' %}" enctype="multipart/form-data" class="rounded-lg p-4">
                 {% csrf_token %}
-                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <input type="hidden" name="user_id" value="{{ custom_user.user.id }}">
                 <div class="relative">
                     <!-- Text area with location and content -->
                     <div class="relative ml-3 border-b border-gray-300">
