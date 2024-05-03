@@ -122,6 +122,9 @@ language_code = get_language()
 
 # Construct the redirect URI dynamically with the language code
 SOCIAL_AUTH_VK_OAUTH2_REDIRECT_URI = f'https://memorypostgre-vgzdxca4.b4a.run/{language_code}/accounts/vk/login/callback/'
+SOCIAL_AUTH_REDIRECT_URI = 'https://memorypostgre-vgzdxca4.b4a.run'
+SOCIAL_AUTH_VK_OAUTH2_KEY = '51916679'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = '0KCNl4TkiCKOL1cokeFk'
 
 
 
