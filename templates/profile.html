@@ -3,81 +3,102 @@
 {% load i18n %}
 {% csrf_token %}
 
+{% block content %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>{% trans "User Profile" %}</title>
     <link href="{% static 'style.css' %}" rel="stylesheet"> <!-- Link static CSS file -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- Link Tailwind CSS -->
+    <style>
+        /* Custom styles */
+        .custom-container {
+            max-width: 600px;
+            margin-top: 9rem;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-container .text-center {
+            margin-bottom: 1rem;
+        }
+
+        .custom-container .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .custom-container .mb-6 {
+            margin-bottom: 2rem;
+        }
+
+        .custom-container .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .custom-container .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-    {% block content %}
-    <div class="bg-gray-100 py-8">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <!-- Profile Picture -->
-                <div class="text-center mb-4">
-                    {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mx-auto">
-                    {% else %}
-                    <img src="{% static 'placeholder_profile_pic.png' %}" alt="Placeholder Profile Picture" class="w-24 h-24 rounded-full mx-auto">
-                    {% endif %}
-                </div>
-                <!-- Profile Information -->
-                <div class="text-center mb-6">
-                    <h2 class="text-xl font-semibold">{{ user.name }}</h2>
-                    <p class="text-gray-600">{{ user.email }}</p>
-                </div>
-                <div class="grid grid-cols-2 gap-x-8">
-                    <div>
-                        <p><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
-                        <p><strong>Registration Method:</strong> {{ user.registration_method }}</p>
-                        <p><strong>Email Verified:</strong> {% if user.email_verified %}Yes{% else %}No{% endif %}</p>
-                    </div>
-                    <div>
-                        <p><strong>Last Login:</strong> {{ user.last_login }}</p>
-                        <p><strong>Two-Factor Authentication:</strong> {% if user.two_factor_authentication %}Enabled{% else %}Disabled{% endif %}</p>
-                    </div>
-                </div>
-                <!-- Social Network IDs -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-2">Social Network IDs</h3>
-                    {% if user.social_network_ids %}
-                    <ul>
-                        {% for key, value in user.social_network_ids.items %}
-                        <li><strong>{{ key }}:</strong> {{ value }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p>No social network IDs available.</p>
-                    {% endif %}
-                </div>
-                <!-- Bio -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-2">Bio</h3>
-                    <p>{{ user.bio }}</p>
-                </div>
-                <!-- Back to Feed Button -->
-                <div class="text-center mt-6">
-                    <a href="{% url 'userfeed' %}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Feed</a>
-                </div>
-                <!-- Save and Cancel Buttons (for edits) -->
-                <!-- Add your logic here for showing these buttons based on edit mode -->
-                <!-- Example:
-            <div class="text-center mt-4">
-                <button class="btn btn-success mr-2">Save</button>
-                <button class="btn btn-danger">Cancel</button>
-            </div>
-            -->
-            </div>
+    <div class="custom-container rounded-lg">
+        <h2 class="text-center mb-4">{% trans "User Profile" %}</h2>
+        <!-- Profile Picture -->
+        <div class="text-center mb-4">
+            {% if custom_user.profile_picture %}
+            <img src="{{ custom_user.profile_picture.url }}" alt="{% trans "Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+            {% else %}
+            <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans "Placeholder Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+            {% endif %}
+        </div>
+        <!-- Profile Information -->
+        <div class="mb-6">
+            <p><strong>{% trans "Username" %}:</strong> {{ custom_user.user.username }}</p>
+            <p><strong>{% trans "Email" %}:</strong> {{ custom_user.user.email }}</p>
+            <p><strong>{% trans "Date of Birth" %}:</strong> {{ custom_user.date_of_birth }}</p>
+            <p><strong>{% trans "Registration Method" %}:</strong> {{ custom_user.registration_method }}</p>
+            <p><strong>{% trans "Email Verified" %}:</strong> {% if custom_user.email_verified %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</p>
+            <p><strong>{% trans "Last Login" %}:</strong> {{ custom_user.last_login }}</p>
+            <p><strong>{% trans "Two-Factor Authentication" %}:</strong> {% if custom_user.two_factor_authentication %}{% trans "Enabled" %}{% else %}{% trans "Disabled" %}{% endif %}</p>
+        </div>
+        <!-- Social Network IDs -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">{% trans "Social Network IDs" %}</h3>
+            {% if custom_user.social_network_ids %}
+            <ul>
+                {% for key, value in custom_user.social_network_ids.items %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>{% trans "No social network IDs available." %}</p>
+            {% endif %}
+        </div>
+        <!-- Bio -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">{% trans "Bio" %}</h3>
+            <p>{{ custom_user.bio }}</p>
+        </div>
+        <!-- Back to Feed Button -->
+        <div class="text-center mb-6">
+            <a href="{% url 'userfeed' %}" class="btn">{% trans "Back to Feed" %}</a>
         </div>
     </div>
-    {% endblock %}
 </body>
 
 </html>
-
+{% endblock %}

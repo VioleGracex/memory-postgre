@@ -1,0 +1,196 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-03 22:41+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: templates/accounts/login.html:11 templates/accounts/reg.html:9
+#: templates/accounts/reg.html:118 templates/home.html:33
+msgid "Login"
+msgstr ""
+
+#: templates/accounts/login.html:95
+msgid "LOGIN"
+msgstr ""
+
+#: templates/accounts/login.html:104
+msgid "Username..."
+msgstr ""
+
+#: templates/accounts/login.html:110
+msgid "Password..."
+msgstr ""
+
+#: templates/accounts/login.html:114
+msgid "Log in"
+msgstr ""
+
+#: templates/accounts/login.html:121
+msgid "Don't have an account?"
+msgstr ""
+
+#: templates/accounts/login.html:126 templates/home.html:41
+msgid "Register"
+msgstr ""
+
+#: templates/accounts/reg.html:68
+msgid "REGISTER ACCOUNT"
+msgstr ""
+
+#: templates/accounts/reg.html:77
+msgid "Username"
+msgstr ""
+
+#: templates/accounts/reg.html:83
+msgid "First Name"
+msgstr ""
+
+#: templates/accounts/reg.html:84
+msgid "Last Name"
+msgstr ""
+
+#: templates/accounts/reg.html:91
+msgid "Email"
+msgstr ""
+
+#: templates/accounts/reg.html:97
+msgid "Password"
+msgstr ""
+
+#: templates/accounts/reg.html:103
+msgid "Confirm Password"
+msgstr ""
+
+#: templates/accounts/reg.html:107
+msgid "Register Account"
+msgstr ""
+
+#: templates/accounts/reg.html:114
+msgid "Already have an account?"
+msgstr ""
+
+#: templates/accounts/reg.html:134
+msgid "Username.."
+msgstr ""
+
+#: templates/accounts/reg.html:135
+msgid "first name.."
+msgstr ""
+
+#: templates/accounts/reg.html:136
+msgid "Last Name.."
+msgstr ""
+
+#: templates/accounts/reg.html:137
+msgid "Email.."
+msgstr ""
+
+#: templates/accounts/reg.html:138
+msgid "Enter password..."
+msgstr ""
+
+#: templates/accounts/reg.html:139
+msgid "Re-enter Password..."
+msgstr ""
+
+#: templates/home.html:14 templates/home.html:27
+msgid "Welcome to MemoryMap"
+msgstr ""
+
+#: templates/home.html:28
+msgid "A place to store and cherish your memories of visited locations."
+msgstr ""
+
+#: templates/home.html:49
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"                        of your existing third party accounts. Or, <a "
+"href=\"%(signup_url)s\">sign up</a>\n"
+"                        for a %(site_name)s account and sign in below:"
+msgstr ""
+
+#: templates/home.html:59
+msgid "or"
+msgstr ""
+
+#: templates/home.html:66
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"                    <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: templates/home.html:80
+msgid "Login with VK"
+msgstr ""
+
+#: templates/language_selector.html:5
+msgid "English"
+msgstr ""
+
+#: templates/language_selector.html:7
+msgid "Russian"
+msgstr ""
+
+#: templates/user_feed.html:13
+msgid "User Feed"
+msgstr ""
+
+#: templates/user_feed.html:36 templates/user_feed.html:131
+msgid "Profile Picture"
+msgstr ""
+
+#: templates/user_feed.html:39 templates/user_feed.html:133
+msgid "Placeholder Profile Picture"
+msgstr ""
+
+#: templates/user_feed.html:51
+msgid "Placeholder"
+msgstr ""
+
+#: templates/user_feed.html:63
+msgid "Logout"
+msgstr ""
+
+#: templates/user_feed.html:79
+msgid "No location"
+msgstr ""
+
+#: templates/user_feed.html:80
+msgid "Add to feed..."
+msgstr ""
+
+#: templates/user_feed.html:96 templates/user_feed.html:98
+msgid "Photo"
+msgstr ""
+
+#: templates/user_feed.html:101 templates/user_feed.html:103
+#: templates/user_feed.html:140
+msgid "Location"
+msgstr ""
+
+#: templates/user_feed.html:110
+msgid "Add to Feed"
+msgstr ""
+
+#: templates/user_feed.html:155
+msgid "Memory Image"
+msgstr ""
+
+#: templates/yandex_map.html:8 templates/yandex_map_popup.html:8
+msgid "Yandex Map Location Selector"
+msgstr ""

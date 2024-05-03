@@ -1,0 +1,259 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-03 23:40+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: templates/accounts/login.html:11 templates/accounts/reg.html:9
+#: templates/accounts/reg.html:118 templates/home.html:33
+msgid "Login"
+msgstr "Войти"
+
+#: templates/accounts/login.html:95
+msgid "LOGIN"
+msgstr "ВОЙТИ"
+
+#: templates/accounts/login.html:104
+msgid "Username..."
+msgstr "Имя пользователя.."
+
+#: templates/accounts/login.html:110
+msgid "Password..."
+msgstr "Пароль..."
+
+#: templates/accounts/login.html:114
+msgid "Log in"
+msgstr "Войти"
+
+#: templates/accounts/login.html:121
+msgid "Don't have an account?"
+msgstr "Нет аккаунта?"
+
+#: templates/accounts/login.html:126 templates/home.html:41
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+#: templates/accounts/reg.html:68
+msgid "REGISTER ACCOUNT"
+msgstr "ЗАРЕГИСТРИРОВАТЬ АККАУНТ"
+
+#: templates/accounts/reg.html:77 templates/profile.html:70
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: templates/accounts/reg.html:83
+msgid "First Name"
+msgstr "Имя"
+
+#: templates/accounts/reg.html:84
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: templates/accounts/reg.html:91 templates/profile.html:71
+msgid "Email"
+msgstr "Почта"
+
+#: templates/accounts/reg.html:97
+msgid "Password"
+msgstr "Пароль"
+
+#: templates/accounts/reg.html:103
+msgid "Confirm Password"
+msgstr "Подтвердите пароль"
+
+#: templates/accounts/reg.html:107
+msgid "Register Account"
+msgstr "Зарегистрировать аккаунт"
+
+#: templates/accounts/reg.html:114
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
+
+#: templates/accounts/reg.html:134
+msgid "Username.."
+msgstr "Имя пользователя.."
+
+#: templates/accounts/reg.html:135
+msgid "first name.."
+msgstr "Имя.."
+
+#: templates/accounts/reg.html:136
+msgid "Last Name.."
+msgstr "Фамилия.."
+
+#: templates/accounts/reg.html:137
+msgid "Email.."
+msgstr "Почта.."
+
+#: templates/accounts/reg.html:138
+msgid "Enter password..."
+msgstr "Введите пароль.."
+
+#: templates/accounts/reg.html:139
+msgid "Re-enter Password..."
+msgstr "Повторно введите пароль..."
+
+#: templates/home.html:14 templates/home.html:27
+msgid "Welcome to MemoryMap"
+msgstr "Добро пожаловать в MemoryMap"
+
+#: templates/home.html:28
+msgid "A place to store and cherish your memories of visited locations."
+msgstr "Место для хранения и дорогих воспоминаний о посещенных местах."
+
+#: templates/home.html:49
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"                        of your existing third party accounts. Or, <a "
+"href=\"%(signup_url)s\">sign up</a>\n"
+"                        for a %(site_name)s account and sign in below:"
+msgstr ""
+
+#: templates/home.html:59
+msgid "or"
+msgstr ""
+
+#: templates/home.html:66
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"                    <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: templates/home.html:80
+msgid "Login with VK"
+msgstr "Войти через ВКонтакте"
+
+#: templates/language_selector.html:5
+msgid "English"
+msgstr "Английский"
+
+#: templates/language_selector.html:7
+msgid "Russian"
+msgstr "Русский"
+
+#: templates/profile.html:13 templates/profile.html:59
+msgid "User Profile"
+msgstr ""
+
+#: templates/profile.html:63 templates/user_feed.html:36
+#: templates/user_feed.html:132
+msgid "Profile Picture"
+msgstr "Аватар"
+
+#: templates/profile.html:65 templates/user_feed.html:40
+#: templates/user_feed.html:134
+msgid "Placeholder Profile Picture"
+msgstr "Заглушка аватара"
+
+#: templates/profile.html:72
+msgid "Date of Birth"
+msgstr ""
+
+#: templates/profile.html:73
+msgid "Registration Method"
+msgstr ""
+
+#: templates/profile.html:74
+msgid "Email Verified"
+msgstr ""
+
+#: templates/profile.html:74
+msgid "Yes"
+msgstr ""
+
+#: templates/profile.html:74
+msgid "No"
+msgstr ""
+
+#: templates/profile.html:75
+#, fuzzy
+#| msgid "Login"
+msgid "Last Login"
+msgstr "Войти"
+#: templates/profile.html:76
+msgid "Two-Factor Authentication"
+msgstr "Двухфакторная аутентификация"
+
+#: templates/profile.html:76
+msgid "Enabled"
+msgstr "Включено"
+
+#: templates/profile.html:76
+msgid "Disabled"
+msgstr "Отключено"
+
+#: templates/profile.html:80
+msgid "Social Network IDs"
+msgstr "Идентификаторы социальных сетей"
+
+#: templates/profile.html:88
+msgid "No social network IDs available."
+msgstr "Нет доступных идентификаторов социальных сетей."
+
+#: templates/profile.html:93
+msgid "Bio"
+msgstr "Биография"
+
+#: templates/profile.html:98
+#, fuzzy
+#| msgid "Add to Feed"
+msgid "Back to Feed"
+msgstr "Добавить в ленту"
+
+#: templates/user_feed.html:13
+msgid "User Feed"
+msgstr "Лента пользователя"
+
+#: templates/user_feed.html:64
+msgid "Logout"
+msgstr "Выйти"
+
+#: templates/user_feed.html:80
+msgid "No location"
+msgstr "Нет местоположения"
+
+#: templates/user_feed.html:81
+msgid "Add to feed..."
+msgstr "Добавить в ленту..."
+
+#: templates/user_feed.html:97 templates/user_feed.html:99
+msgid "Photo"
+msgstr "Фото"
+
+#: templates/user_feed.html:102 templates/user_feed.html:104
+#: templates/user_feed.html:141
+msgid "Location"
+msgstr "Местоположение"
+
+#: templates/user_feed.html:111
+msgid "Add to Feed"
+msgstr "Добавить в ленту"
+
+#: templates/user_feed.html:156
+msgid "Memory Image"
+msgstr "Изображение воспоминания"
+
+#: templates/yandex_map.html:8 templates/yandex_map_popup.html:8
+msgid "Yandex Map Location Selector"
+msgstr "Выбор местоположения на Яндекс Картах"
+
+#~ msgid "Placeholder"
+#~ msgstr "Заглушка"

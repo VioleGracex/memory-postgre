@@ -66,8 +66,16 @@ def userfeed(request):
 
 @login_required 
 def profile(request):
-    user = request.user  # Access the authenticated user object
-    return render(request, 'profile.html')
+    # Get the current authenticated user
+    current_user = request.user
+    
+    # Retrieve the associated CustomUser instance
+    custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
+    
+    # Assuming you have a related name 'memory_set' for the user's posts in the Memory model
+    user_posts = custom_user.memory_set.all() if custom_user else None  
+    
+    return render(request, 'profile.html', {'custom_user': custom_user, 'user_posts': user_posts})
 
 User = get_user_model()
 
