@@ -37,8 +37,6 @@ urlpatterns =i18n_patterns(
     path('myproject/', include('django.contrib.auth.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
-    path('vk/login/', views.vk_login, name='vk_login'),
-    path('vk/login/callback/', views.vk_login_callback, name='vk_login_callback'),
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

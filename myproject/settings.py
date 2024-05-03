@@ -85,6 +85,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # For VK login
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -110,9 +114,16 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 1
+from django.utils.translation import get_language
 
-SOCIAL_AUTH_VK_OAUTH2_KEY = '51916679'
-SOCIAL_AUTH_VK_OAUTH2_SECRET = '0KCNl4TkiCKOL1cokeFk'
+# Assuming you have access to the request object
+# You need to extract the language code from the request
+language_code = get_language()
+
+# Construct the redirect URI dynamically with the language code
+SOCIAL_AUTH_VK_OAUTH2_REDIRECT_URI = f'https://memorypostgre-vgzdxca4.b4a.run/{language_code}/accounts/vk/login/callback/'
+
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
