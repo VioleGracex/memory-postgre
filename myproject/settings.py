@@ -104,7 +104,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'APP': {
                 'client_id': '51916679',
                 'secret': '0KCNl4TkiCKOL1cokeFk',
-                'key': ''
+                'key': '7851d00b7851d00b7851d00b087b49ff8c778517851d00b1e6274b87a2b77066ae0263a'
                    }
           },
 }
