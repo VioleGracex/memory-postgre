@@ -289,3 +289,21 @@ def add_to_feed(request):
 
     else:
         return redirect('home') """
+
+from django.shortcuts import redirect
+from social_django.models import UserSocialAuth
+
+def vk_login(request):
+    # Redirect to VK for authentication
+    return redirect('social:begin', 'vk-oauth2')
+
+def vk_login_callback(request):
+    # Handle callback from VK
+    user = request.user
+    vk_auth = UserSocialAuth.objects.get(provider='vk-oauth2', user=user)
+    
+    # Do whatever you need with vk_auth, like logging in the user
+    if user.is_authenticated:
+        return redirect('userfeed')  # Redirect to user feed after successful login
+    else:
+        return redirect('loginpage')  # Redirect back to login page if login fails
