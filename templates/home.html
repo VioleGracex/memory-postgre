@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-
+{% load account socialaccount %}
 {% comment %} {% block title %}MemoryMap Home Page{% endblock title %} {% endcomment %}
 {% block content %}
 <!DOCTYPE html>
@@ -21,13 +21,6 @@
     <link href="{% static 'style.css' %}" rel="stylesheet">
 </head>
 <body>
-
-{% comment %}     {% if user.is_authenticated %}
-    Hi {{ user.username }}!
-    {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    {% endif %} {% endcomment %}
     <div class="container mx-auto py-12">
         <div class="custom-container" style="min-height: 300px; max-width: 600px;">
             <h1 class="text-4xl mt-4 font-bold mb-4 text-center ">{% trans "Welcome to MemoryMap" %}</h1>
@@ -48,13 +41,37 @@
                     <!-- Replace "#" with the actual login URL -->
                 </div>
             </form>
-            {% comment %} <form id="login-form" method="POST" action="{% url 'login_with_vk' %}">
+
+            {% get_providers as socialaccount_providers %}
+
+                {% if socialaccount_providers %}
+                    <p>{% blocktrans with site.name as site_name %}Please sign in with one
+                        of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+                        for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+                    <div class="socialaccount_ballot">
+
+                        <ul class="socialaccount_providers">
+                            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                        </ul>
+
+                        <div class="login-or">{% trans 'or' %}</div>
+
+                    </div>
+
+                {% include "socialaccount/snippets/login_extra.html" %}
+
+            {% else %}
+                <p>{% blocktrans %}If you have not created an account yet, then please
+                    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+            {% endif %}
+            <form id="login-form" method="POST" action="{% url 'social:begin' 'vk-oauth2' %}">
                 {% csrf_token %}
                 <div class="text-center mb-6">
                     <button type="submit" class="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600">{% trans "Login with VK" %}</button>
                     <!-- Replace "#" with the actual login URL -->
                 </div>
-            </form> {% endcomment %}
+            </form>
             
             {% comment %} <form id="fake-login-form" method="POST" action="{% url 'fake_user_login' %}">
                 {% csrf_token %}

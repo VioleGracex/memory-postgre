@@ -35,7 +35,8 @@ urlpatterns =i18n_patterns(
     path('profile/', views.profile, name='profile'),
     path('add_to_feed/', views.add_to_feed, name='add_to_feed'),
     path('myproject/', include('django.contrib.auth.urls')),
-    
+    path('social-auth/', include('social_django.urls', namespace='social')),
+    path('accounts/', include('allauth.urls')),
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

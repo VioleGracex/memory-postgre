@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 #AUTH_USER_MODEL = "myproject.CustomUser"
 
-CSRF_TRUSTED_ORIGINS = ['https://memorypostgre-vgzdxca4.b4a.run', 'https://memorysqlite-i25vcrt6.b4a.run' , 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://memorypostgre-vgzdxca4.b4a.run', 'https://memorysqlite-i25vcrt6.b4a.run' , 'https://*.127.0.0.1', 'https://example.com']
 
 #CSRF_TRUSTED_ORIGINS = ['*']
 
@@ -45,8 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'social_django',
-    'myproject'
+    'myproject',
+
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # selected providers, more at https://django-allauth.readthedocs.io/en/latest/installation.html
+    'allauth.socialaccount.providers.vk',  # if you need VK api
 ]
 
 MIDDLEWARE = [
@@ -59,6 +67,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'djeym.middlewares.AjaxMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -81,6 +92,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+)
+
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'vk': {
+            'APP': {
+                'client_id': '51916679',
+                'secret': '0KCNl4TkiCKOL1cokeFk',
+                'key': ''
+                   }
+          },
+}
+
+SITE_ID = 1
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '51916679'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = '0KCNl4TkiCKOL1cokeFk'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
