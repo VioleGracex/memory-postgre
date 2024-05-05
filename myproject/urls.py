@@ -31,13 +31,14 @@ urlpatterns =i18n_patterns(
     path('logout/', views.logout_user, name='logout_user'),
     path('regpage/', views.regpage, name='regpage'),
     path('login/', views.login_user, name='login_user'),
-    path('userfeed/', views.userfeed, name='userfeed'),
-    path('profile/', views.profile, name='profile'),
-     path('profileAdd/', views.add_to_profile, name='add_to_profile'),
+    path('<str:username>/userfeed/', views.user_specific_feed, name='user_specific_feed'),  # User-specific URL
+    path('<str:username>/profile/', views.profile, name='profile'),
+    path('profileAdd/', views.add_to_profile, name='add_to_profile'),
     path('add_to_feed/', views.add_to_feed, name='add_to_feed'),
     path('myproject/', include('django.contrib.auth.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
+    
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

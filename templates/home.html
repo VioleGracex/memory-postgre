@@ -82,76 +82,9 @@
                 </div>
             </form>
             
-            
-            {% comment %} <form id="fake-login-form" method="POST" action="{% url 'fake_user_login' %}">
-                {% csrf_token %}
-                <div class="text-center">
-                    <button type="submit" class="inline-block px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-600">{% trans "Access User Feed (Fake User)" %}</button>
-                </div>
-            </form> {% endcomment %}
         </div>
     </div>
     
-    <!-- Script to handle form submission -->
-    <script>
-        // Add event listener to the login form
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            // Prevent the default form submission
-            event.preventDefault();
-            // Submit the form via AJAX
-            var form = this;
-            var formData = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // If login is successful, redirect to user feed page
-                    window.location.href = '{% url 'userfeed' %}';
-                } else {
-                    // Handle login failure
-                    // For example, display an error message
-                    console.error('Login failed');
-                }
-            })
-            .catch(error => {
-                console.error('Login error:', error);
-            });
-        });
-
-        // Add event listener to the fake login form
-        document.getElementById('fake-login-form').addEventListener('submit', function(event) {
-            // Prevent the default form submission
-            event.preventDefault();
-            // Submit the form via AJAX
-            var form = this;
-            var formData = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // If fake login is successful, redirect to user feed page
-                    window.location.href = '{% url 'userfeed' %}';
-                } else {
-                    // Handle login failure
-                    // For example, display an error message
-                    console.error('Fake login failed');
-                }
-            })
-            .catch(error => {
-                console.error('Fake login error:', error);
-            });
-        });
-    </script>
 </body>
 </html>
 {% endblock %}

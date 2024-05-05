@@ -32,11 +32,11 @@
             <!-- Profile avatar -->
             <div class="profile-avatar align-center">
                 {% if custom_user.profile_picture %}
-                    <a href="{% url 'profile' %}">
+                    <a href="{% url 'profile' custom_user.user.username %}">
                         <img src="{{ custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
                     </a>            
                 {% else %}
-                    <a href="{% url 'profile' %}">
+                    <a href="{% url 'profile' custom_user.user.username %}">
                         <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}">
                     </a>  
                 {% endif %}
@@ -48,7 +48,7 @@
             <div class="profile-name">
                 <span class="ml-20 text-lg">
                     {% if custom_user.first_name or custom_user.last_name %}
-                        <a href="{% url 'profile'%}">
+                        <a href="{% url 'profile' custom_user.user.username %}">
                     {% endif %}
                     {{ custom_user.user.first_name|default:"" }} {{ custom_user.user.last_name|default:"" }}{% if not custom_user.user.first_name or not custom_user.user.last_name %}{% trans 'Placeholder' %}{% endif %}
                     {% if custom_user.user.first_name or custom_user.user.last_name %}

@@ -171,18 +171,12 @@
             }
         }
 
-        // Function to handle opening and closing of context menu
         document.getElementById('optionsBtn').addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent the click event from bubbling up to document level
             document.getElementById('optionsMenu').classList.toggle('hidden');
+            event.preventDefault(); // Prevent the default behavior of the button element
         });
-
-        // Function to handle closing of context menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.profile-options')) {
-                document.getElementById('optionsMenu').classList.add('hidden');
-            }
-        });
+        
 
         document.getElementById('changeAvatarOption').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default link behavior
@@ -224,13 +218,13 @@
             // Redirect to userfeed
             window.location.href = "{% url 'userfeed' %}";
         }
-
-
         // Event listener for save changes button
         document.getElementById('saveChangesBtn').addEventListener('click', handleSaveChanges);
 
         // Event listener for cancel changes button
         document.getElementById('cancelChangesBtn').addEventListener('click', handleCancelChanges);
+        
+       
     </script>
 </body>
 

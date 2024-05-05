@@ -15,7 +15,7 @@ class CustomUser(models.Model):
     last_login = models.DateTimeField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     two_factor_authentication = models.BooleanField(default=False)
-    is_private = models.BooleanField(default=True)
+    profile_type = models.CharField(max_length=20, choices=[('public', 'Public'), ('private', 'Private')], default='private')
 
     def __str__(self):
         return self.user.username
