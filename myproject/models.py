@@ -21,6 +21,7 @@ class CustomUser(models.Model):
         return self.user.username
 
 class Memory(models.Model):
+    id = models.AutoField(primary_key=True)  # Add an ID field as AutoField
     custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField()

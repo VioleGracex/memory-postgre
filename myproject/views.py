@@ -45,13 +45,13 @@ def login_page(request):
     return render(request, 'accounts/login.html')
 
 
-@login_required 
-def profile(request, username):
+@login_required
+def profile(request, user_id):
     # Get the current authenticated user
     current_user = request.user
 
-    # Get the CustomUser object associated with the given username
-    custom_user = get_object_or_404(CustomUser, user__username=username)
+    # Get the CustomUser object associated with the given ID
+    custom_user = get_object_or_404(CustomUser, id=user_id)
 
     # Check if the authenticated user matches the requested user
     if current_user != custom_user.user:
@@ -65,9 +65,9 @@ def profile(request, username):
 
 
 @login_required
-def user_specific_feed(request, username):
-    # Get the CustomUser object associated with the given username
-    custom_user = get_object_or_404(CustomUser, user__username=username)
+def user_specific_feed(request, user_id):
+    # Get the CustomUser object associated with the given ID
+    custom_user = get_object_or_404(CustomUser, id=user_id)
 
     # Check if the user feed is public or if the current user is the owner
     if custom_user.profile_type == 'public' or request.user == custom_user.user:
@@ -142,17 +142,16 @@ def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Redirect to the user's specific feed based on their username
-            return redirect('user_specific_feed', username=username)
+            custom_user = get_object_or_404(CustomUser, user=request.user)
+            return redirect('user_specific_feed', user_id=custom_user.id)
         else:
             messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('loginpage')  # Redirect back to login page if login fails
+            return redirect('loginpage')
     else:
-        return render(request, 'accounts/login.html')
+        return redirect('loginpage')
 
 
 # Define the custom pipeline function
@@ -175,7 +174,7 @@ def social_auth_user(request, sociallogin, **kwargs):
         # Associate the custom user with the social account
         sociallogin.connect(request, user=custom_user)
         # Redirect to user-specific feed page after login
-        return redirect('user_specific_feed', username=custom_user.username)
+        return redirect('user_specific_feed', custom_user.id)
     return
 
 def logout_user(request):
@@ -189,105 +188,67 @@ def logout_user(request):
 @login_required
 def add_to_feed(request):
     if request.method == 'POST':
-        # Get the current authenticated user
         current_user = request.user
-        
-        # Retrieve the associated CustomUser instance
-        custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
-        
-        # Assuming you have a related name 'memory_set' for the user's posts in the Memory model
+        custom_user = get_object_or_404(CustomUser, user=current_user)
         if custom_user:
             content = request.POST.get('content')
             location = request.POST.get('location', 'Default location')
-            images = request.FILES.getlist('images')  # Corrected to match the form input name
+            images = request.FILES.getlist('images')
             videos = request.FILES.getlist('videos')
 
             if content:
-                # Create a new Memory object and associate it with the user
                 memory = custom_user.memory_set.create(text=content, location=location)
-                
-                # Add images to the memory if they exist
                 for image in images:
                     memory.image_set.create(image=image)
-                
-                # Add videos to the memory if they exist
                 for video in videos:
                     memory.video_set.create(video=video)
-                
                 messages.success(request, 'Memory added to your feed successfully.')
-                return redirect('user_specific_feed', username=request.user)
             else:
                 messages.error(request, 'Content is required.')
-                return redirect('user_specific_feed', username=request.user)
         else:
             messages.error(request, 'CustomUser not found.')
-            return redirect('user_specific_feed', username=request.user)
     else:
         messages.error(request, 'Method not allowed.')
-        return redirect('user_specific_feed', username=request.user)  # Redirect to user feed page for GET requests
+    return redirect('user_specific_feed', user_id=custom_user.id)
 
-login_required
+@login_required
 @require_POST
 def delete_memory(request, memory_id):
-    # Get the memory object
     memory = get_object_or_404(Memory, id=memory_id)
-    # Get the CustomUser object associated with the current user
     custom_user = get_object_or_404(CustomUser, user=request.user)
-
     try:
-        # Try to get the user feed associated with the current user
         user_feed = UserFeed.objects.get(user=custom_user)
     except UserFeed.DoesNotExist:
-        # If the user feed doesn't exist, create a new one
         user_feed = UserFeed.objects.create(user=custom_user)
-
-    # Check if the current user is the owner of the memory
     if memory.custom_user == custom_user:
-        # Remove the memory from the user feed
         if user_feed.remove_memory(memory_id):
-            # If memory successfully removed from the user feed, delete the memory
             memory.delete()
             messages.success(request, 'Memory deleted successfully.')
-            return redirect('user_specific_feed', username=request.user)
         else:
             messages.error(request, 'Failed to delete memory from user feed.')
-            return redirect('user_specific_feed', username=request.user)
     else:
         messages.error(request, 'You are not authorized to delete this memory.')
-
-    return redirect('user_specific_feed', username=request.user)  # Redirect to the memory list page
+    return redirect('user_specific_feed', user_id=custom_user.id)
 #endregion
 
 
 @login_required
 def add_to_profile(request):
     if request.method == 'POST':
-        # Get the current authenticated user
         current_user = request.user
-        
-        # Retrieve the associated CustomUser instance
-        custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
-        
+        custom_user = get_object_or_404(CustomUser, user=current_user)
         if custom_user:
-            # Extract form data
             profile_picture = request.FILES.get('avatar')
             cover_image = request.FILES.get('cover')
             date_of_birth = request.POST.get('date_of_birth')
             bio = request.POST.get('bio')
-            profile_type = request.POST.get('profile_type')  # Default to 'public' if not provided
-            if profile_picture:
-                print("profile_picture:", profile_picture.name)
-            else:
-                print("No profile picture uploaded.")
+            profile_type = request.POST.get('profile_type')
 
-            # Check if date of birth is valid
             if date_of_birth is not None:
                 try:
                     date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
                 except ValueError:
-                    # Handle case where date is not valid
                     date_of_birth = None
-            # Update CustomUser instance with new data
             if profile_picture is not None:
                 custom_user.profile_picture = profile_picture
             if cover_image is not None:
@@ -302,14 +263,10 @@ def add_to_profile(request):
             custom_user.save()
 
             messages.success(request, _('Changes added to your profile successfully.'))
-            return redirect('user_specific_feed', username=request.user)
         else:
-            messages.error(request, _('CustomUser not found.'))
-            return redirect('user_specific_feed', username=request.user)  
+            messages.error(request, _('CustomUser not found.')) 
     else:
-        # Handle GET request to render profile update form
-        # You can render the form template here
-        pass
-
+        pass  # Handle GET request to render profile update form
+    return redirect('user_specific_feed', user_id=custom_user.id)
 
 

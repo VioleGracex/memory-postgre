@@ -32,11 +32,11 @@
             <!-- Profile avatar -->
             <div class="profile-avatar align-center">
                 {% if custom_user.profile_picture %}
-                    <a href="{% url 'profile' custom_user.user.username %}">
+                    <a href="{% url 'profile' custom_user.id %}">
                         <img src="{{ custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
                     </a>            
                 {% else %}
-                    <a href="{% url 'profile' custom_user.user.username %}">
+                    <a href="{% url 'profile' custom_user.id %}">
                         <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}">
                     </a>  
                 {% endif %}
@@ -60,6 +60,7 @@
             <!-- Logout button -->
             <form id="logout-form" method="POST" action="{% url 'logout_user' %}">
                 {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ custom_user.user.id }}">
                 <button type="submit" class="flex items-center mr-4 text-red-500 hover:text-red-700 ml-auto">
                     <i class="fas fa-sign-out-alt mr-1"></i> <!-- Font Awesome logout icon -->
                     {% trans "Logout" %}

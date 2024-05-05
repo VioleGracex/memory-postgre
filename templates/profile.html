@@ -152,7 +152,7 @@
 
             <!-- Back to Feed Button -->
             <div class="text-center">
-                <a href="{% url 'user_specific_feed' username=custom_user.user.username %}" class="btn">{% trans "Back to Feed" %}</a>
+                <a href="{% url 'user_specific_feed' user_id=custom_user.id %}" class="btn">{% trans "Back to Feed" %}</a>
             </div>
 
 
@@ -219,7 +219,7 @@
             clearUploadedImages();
             
             // Redirect to userfeed
-            window.location.href = "{% url 'user_specific_feed' username=custom_user.user.username %}";
+            window.location.href = "{% url 'user_specific_feed' user_id=custom_user.id %}";
         }
         // Event listener for save changes button
         document.getElementById('saveChangesBtn').addEventListener('click', handleSaveChanges);
