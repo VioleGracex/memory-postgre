@@ -33,6 +33,7 @@ urlpatterns =i18n_patterns(
     path('login/', views.login_user, name='login_user'),
     path('userfeed/', views.userfeed, name='userfeed'),
     path('profile/', views.profile, name='profile'),
+     path('profileAdd/', views.add_to_profile, name='add_to_profile'),
     path('add_to_feed/', views.add_to_feed, name='add_to_feed'),
     path('myproject/', include('django.contrib.auth.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),

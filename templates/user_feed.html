@@ -47,9 +47,10 @@
             <!-- Profile name -->
             <div class="profile-name">
                 <span class="ml-20 text-lg">
-                    {% if custom_user.user.first_name or custom_user.user.last_name %}
+                    {% if custom_user.first_name or custom_user.last_name %}
                         <a href="{% url 'profile'%}">
                     {% endif %}
+                    {{ custom_user.user.first_name|default:"" }} {{ custom_user.user.last_name|default:"" }}{% if not custom_user.user.first_name or not custom_user.user.last_name %}{% trans 'Placeholder' %}{% endif %}
                     {% if custom_user.user.first_name or custom_user.user.last_name %}
                         </a>
                     {% endif %}

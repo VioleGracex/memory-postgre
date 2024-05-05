@@ -71,6 +71,10 @@
                     alt="VK" height="50">
                 </a>
             </p>
+            
+            <p>
+                <a href="/login/vk-oauth2"><img src="/static/lvk.png" class="avatar-3" data-toggle="tooltip" title="{% trans 'Login via VKontakte' %}"></a>
+            </p>
             <form id="login-form" method="GET" action="{% url 'social:begin' 'vk-oauth2' %}">
                 {% csrf_token %}
                 <div class="text-center mb-6">

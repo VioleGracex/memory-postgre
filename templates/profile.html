@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-{% csrf_token %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -13,6 +12,7 @@
     <title>{% trans "User Profile" %}</title>
     <link href="{% static 'style.css' %}" rel="stylesheet"> <!-- Link static CSS file -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- Link Tailwind CSS -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome Icons -->
     <style>
         /* Custom styles */
         .custom-container {
@@ -55,49 +55,183 @@
 </head>
 
 <body>
-    <div class="custom-container rounded-lg">
-        <h2 class="text-center mb-4">{% trans "User Profile" %}</h2>
-        <!-- Profile Picture -->
-        <div class="text-center mb-4">
-            {% if custom_user.profile_picture %}
-            <img src="{{ custom_user.profile_picture.url }}" alt="{% trans "Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
-            {% else %}
-            <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans "Placeholder Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
-            {% endif %}
+    <form method="POST" action="{% url 'add_to_profile' %}" enctype="multipart/form-data" class="rounded-lg p-4">
+        {% csrf_token %}
+        <div class="custom-container rounded-lg">
+            <h2 class="text-center mb-4">{% trans "User Profile" %}</h2>
+            <!-- Add options button and context menu structure -->
+            <div class="profile-options ml-auto">
+                <button id="optionsBtn" class="options-btn">
+                    <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
+                </button>
+                <div id="optionsMenu" class="options-menu hidden">
+                    <ul>
+                        <li><a href="#" id="changeAvatarOption">{% trans "Change Avatar Picture" %}</a></li>
+                        <li><a href="#" id="changeCoverOption">{% trans "Change Cover Picture" %}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Profile Picture -->
+            <div class="text-center mb-4">
+                {% if custom_user.profile_picture %}
+                <img id="profilePicture" src="{{ custom_user.profile_picture.url }}" alt="{% trans "Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+                {% else %}
+                <img id="profilePicture" src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans "Placeholder Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+                {% endif %}
+            </div>
+            <!-- Profile Information -->
+            <div class="mb-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="font-bold">{% trans "Username" %}:</p>
+                        <p>{{ custom_user.user.username }}</p>
+                    </div>
+                    <div>
+                        <p class="font-bold">{% trans "Email" %}:</p>
+                        <p>{{ custom_user.user.email }}</p>
+                    </div>
+                    <div class="items-center">
+                        <p class="font-bold">{% trans "Date of Birth" %}:
+                            <button type="button" id="dateOfBirthEditBtn" onclick="enableEdit('dateOfBirthInput')" class="edit-button ml-2"><i class="fas fa-pen"></i></button>
+                        </p>
+                        
+                        <div>
+                            <input type="date" id="dateOfBirthInput" name="date_of_birth" value="{{ custom_user.date_of_birth|date:'Y-m-d' }}" class="fontExceptionBlack form-input mt-2" disabled>
+                        </div>
+                    </div>                
+                    <div>
+                        <p class="font-bold">{% trans "Registration Method" %}:</p>
+                        <p>{{ custom_user.registration_method }}</p>
+                    </div>                
+                    <div>
+                        <p class="font-bold">{% trans "Email Verified" %}:</p>
+                        <p>{{ custom_user.email_verified }}</p>
+                    </div>
+                    <div>
+                        <p class="font-bold">{% trans "Profile Type" %}:</p>
+                        <select id="profileTypeInput" name="profile_type" class="form-select fontExceptionBlack border border-black">
+                            <option value="private" {% if custom_user.profile_type == 'private' %}selected{% endif %}>{% trans "Private" %}</option>
+                            <option value="public" {% if custom_user.profile_type == 'public' %}selected{% endif %}>{% trans "Public" %}</option>   
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Social Network IDs -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">{% trans "Social Network IDs" %}</h3>
+                {% if custom_user.social_network_ids %}
+                <ul>
+                    {% for key, value in custom_user.social_network_ids.items %}
+                    <li><strong>{{ key }}:</strong> {{ value }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>{% trans "No social network IDs available." %}</p>
+                {% endif %}
+            </div>
+            <!-- Bio -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">{% trans "Bio" %}</h3>
+                <div class="flex items-center">
+                    <input type="text" id="bioInput" name="bio" value="{{ custom_user.bio }}" class="fontExceptionBlack form-input" style="border: 1px solid #ccc; padding: 8px;" disabled>
+                    <button type="button" id="bioEditBtn" onclick="enableEdit('bioInput')" class="edit-button"><i class="fas fa-pen"></i></button>
+                </div>
+            </div>
+            <div class="text-center">
+                <!-- Save button -->
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="saveChangesBtn">
+                    {% trans "Save Changes" %}
+                </button>
+                <!-- Cancel button -->
+                <button type="button" id="cancelChangesBtn" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    {% trans "Cancel Changes" %}
+                </button>
+            </div>
+
+            <!-- Back to Feed Button -->
+            <div class="text-center">
+                <a href="{% url 'userfeed' %}" class="btn">{% trans "Back to Feed" %}</a>
+            </div>
+
+            <!-- Avatar picture input -->
+            <input type="file" id="avatarInput" name="avatar" style="display: none;" accept="image/*">
+
+            <!-- Cover picture input -->
+            <input type="file" id="coverInput" name="cover" style="display: none;" accept="image/*">
         </div>
-        <!-- Profile Information -->
-        <div class="mb-6">
-            <p><strong>{% trans "Username" %}:</strong> {{ custom_user.user.username }}</p>
-            <p><strong>{% trans "Email" %}:</strong> {{ custom_user.user.email }}</p>
-            <p><strong>{% trans "Date of Birth" %}:</strong> {{ custom_user.date_of_birth }}</p>
-            <p><strong>{% trans "Registration Method" %}:</strong> {{ custom_user.registration_method }}</p>
-            <p><strong>{% trans "Email Verified" %}:</strong> {% if custom_user.email_verified %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</p>
-            <p><strong>{% trans "Last Login" %}:</strong> {{ custom_user.last_login }}</p>
-            <p><strong>{% trans "Two-Factor Authentication" %}:</strong> {% if custom_user.two_factor_authentication %}{% trans "Enabled" %}{% else %}{% trans "Disabled" %}{% endif %}</p>
-        </div>
-        <!-- Social Network IDs -->
-        <div class="mb-6">
-            <h3 class="text-lg font-semibold mb-2">{% trans "Social Network IDs" %}</h3>
-            {% if custom_user.social_network_ids %}
-            <ul>
-                {% for key, value in custom_user.social_network_ids.items %}
-                <li><strong>{{ key }}:</strong> {{ value }}</li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>{% trans "No social network IDs available." %}</p>
-            {% endif %}
-        </div>
-        <!-- Bio -->
-        <div class="mb-6">
-            <h3 class="text-lg font-semibold mb-2">{% trans "Bio" %}</h3>
-            <p>{{ custom_user.bio }}</p>
-        </div>
-        <!-- Back to Feed Button -->
-        <div class="text-center mb-6">
-            <a href="{% url 'userfeed' %}" class="btn">{% trans "Back to Feed" %}</a>
-        </div>
-    </div>
+    </form> 
+
+    <script>
+        function enableEdit(inputId) {
+            var inputField = document.getElementById(inputId);
+            if (inputField.disabled) {
+                inputField.removeAttribute('disabled');
+            } else {
+                inputField.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        // Function to handle opening and closing of context menu
+        document.getElementById('optionsBtn').addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the click event from bubbling up to document level
+            document.getElementById('optionsMenu').classList.toggle('hidden');
+        });
+
+        // Function to handle closing of context menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.profile-options')) {
+                document.getElementById('optionsMenu').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('changeAvatarOption').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById('avatarInput').click(); // Trigger the file input
+        });
+
+        // Event listener for changing avatar picture
+        document.getElementById('avatarInput').addEventListener('change', function(event) {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // Set the image source to the data URL
+                    document.getElementById('profilePicture').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Function to clear uploaded images
+        function clearUploadedImages() {
+            document.getElementById('avatarInput').value = '';
+            document.getElementById('coverInput').value = '';
+        }
+
+        // Function to handle save changes button click
+        function handleSaveChanges() {
+            // Your save changes logic here
+
+            // Clear uploaded images
+            clearUploadedImages();
+        }
+
+        // Function to handle cancel changes button click
+        function handleCancelChanges() {
+            // Clear uploaded images
+            clearUploadedImages();
+            
+            // Redirect to userfeed
+            window.location.href = "{% url 'userfeed' %}";
+        }
+
+
+        // Event listener for save changes button
+        document.getElementById('saveChangesBtn').addEventListener('click', handleSaveChanges);
+
+        // Event listener for cancel changes button
+        document.getElementById('cancelChangesBtn').addEventListener('click', handleCancelChanges);
+    </script>
 </body>
 
 </html>

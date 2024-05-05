@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required  # Import the login_re
 from .models import CustomUser, UserFeed, Memory, Image, Video
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from datetime import datetime
+from django.utils.translation import gettext as _
 
 #region Utility Functions
 
@@ -201,3 +203,53 @@ def add_to_feed(request):
         return redirect('userfeed')  # Redirect to user feed page for GET requests
 
 #endregion
+
+
+@login_required
+def add_to_profile(request):
+    if request.method == 'POST':
+        # Get the current authenticated user
+        current_user = request.user
+        
+        # Retrieve the associated CustomUser instance
+        custom_user = CustomUser.objects.filter(user=current_user).first()  # Assuming user is the ForeignKey field in CustomUser model
+        
+        if custom_user:
+            # Extract form data
+            profile_picture = request.FILES.get('avatar')
+            cover_image = request.FILES.get('cover')
+            date_of_birth = request.POST.get('date_of_birth')
+            bio = request.POST.get('bio')
+            profile_type = request.POST.get('profile_type')  # Default to 'public' if not provided
+            print("date_of_birth:", date_of_birth)
+            # Check if date of birth is valid
+            if date_of_birth is not None:
+                try:
+                    date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
+                except ValueError:
+                    # Handle case where date is not valid
+                    date_of_birth = None
+            # Update CustomUser instance with new data
+            if profile_picture is not None:
+                custom_user.profile_picture = profile_picture
+            if cover_image is not None:
+                custom_user.cover_image = cover_image
+            if date_of_birth is not None:
+                custom_user.date_of_birth = date_of_birth
+            if bio is not None:
+                custom_user.bio = bio
+            if profile_type is not None:
+                custom_user.profile_type = profile_type
+            
+            custom_user.save()
+
+            messages.success(request, _('Changes added to your profile successfully.'))
+            return redirect('userfeed')
+        else:
+            messages.error(request, _('CustomUser not found.'))
+            return redirect('userfeed')  # Redirect to user feed page if CustomUser is not found
+    else:
+        # Handle GET request to render profile update form
+        # You can render the form template here
+        pass
+
