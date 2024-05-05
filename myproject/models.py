@@ -41,7 +41,7 @@ class CustomUser(models.Model):
 
 
 class Memory(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField()
     likes = models.ManyToManyField(CustomUser, related_name='memory_likes')

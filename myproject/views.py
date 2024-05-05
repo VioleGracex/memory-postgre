@@ -70,8 +70,8 @@ def user_specific_feed(request, username):
 
     # Check if the user feed is public or if the current user is the owner
     if custom_user.profile_type == 'public' or request.user == custom_user.user:
-        user_posts = custom_user.memory_set.all()
-        return render(request, 'user_feed.html', {'custom_user': custom_user, 'user_posts': user_posts})
+        user_memories = custom_user.memory_set.all()
+        return render(request, 'user_feed.html', {'custom_user': custom_user, 'user_memories': user_memories})
     else:
         # User feed is private and the current user is not the owner
         return HttpResponseForbidden("You don't have permission to view this user's feed.")
@@ -163,16 +163,18 @@ def social_auth_user(request, sociallogin, **kwargs):
         
         # Create a custom user object and populate it with VK data
         custom_user = CustomUser.objects.create(
-            username=vk_data['username'],  # Customize this according to VK data structure
+            username=vk_data['username'],  
             first_name=vk_data['first_name'],
             last_name=vk_data['last_name'],
             email=vk_data['email'],
             date_of_birth=vk_data.get('date_of_birth'),  # Assuming 'date_of_birth' is a key in vk_data
             profile_picture=vk_data.get('profile_picture'),  # Assuming 'profile_picture' is a key in vk_data
-            
+            # Add other fields as needed
         )
         # Associate the custom user with the social account
         sociallogin.connect(request, user=custom_user)
+        # Redirect to user-specific feed page after login
+        return redirect('user_specific_feed', username=custom_user.username)
     return
 
 def logout_user(request):

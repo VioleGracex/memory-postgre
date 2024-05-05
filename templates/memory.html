@@ -1,0 +1,66 @@
+<!-- memory.html -->
+{% load i18n %}
+{% load static %}
+
+<!-- Display a single memory -->
+<div class="custom-container memory mt-9">
+    <!-- Profile information -->
+    <div class="flex justify-start mb-4">
+        <div>
+            {% if memory.custom_user.profile_picture %}
+                <img src="{{  memory.custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="small-profile-avatar">
+            {% else %}
+                <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
+            {% endif %}
+        </div>
+        <div>
+            {{ memory.custom_user.user.first_name|default:"" }} {{ memory.custom_user.user.last_name|default:"" }}
+            <div>
+                {% if memory.location %}
+                    <p class="location text-white">{% trans 'Location' %}: {{ memory.location }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="memory-header ml-auto">
+            <p class="text-sm text-gray-500 mr-2">{{ memory.created_at }}</p>
+            <div class="profile-options ml-auto">
+                <button class="options-btn" onclick="toggleOptionsMenu(event)">
+                    <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
+                </button>
+                <div class="options-menu hidden">
+                    <ul>
+                        <li><a href="#" id="editMemoryOption">{% trans "Edit Memory" %}</a></li>
+                        <li><a href="#" id="deleteMemoryOption">{% trans "Delete Memory" %}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Memory content -->
+    <div class="memory-content">
+        {% if memory.text %}
+            <p>{{ memory.text }}</p>
+        {% endif %}
+        <div class="media">
+            {% for image in memory.image_set.all %}
+                <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}">
+            {% endfor %}
+            {% for video in memory.video_set.all %}
+                <video controls>
+                    <source src="{{ video.video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to toggle options menu visibility
+    function toggleOptionsMenu(event) {
+        event.stopPropagation(); // Prevent the click event from bubbling up to document level
+        var optionsMenu = event.target.nextElementSibling;
+        optionsMenu.classList.toggle('hidden');
+        event.preventDefault(); // Prevent the default behavior of the button element
+    }
+</script>

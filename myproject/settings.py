@@ -117,7 +117,14 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_PIPELINE = (
-    'myproject.pipeline.social_auth_user', 
+    'allauth.socialaccount.pipeline.social_auth.social_details',
+    'allauth.socialaccount.pipeline.social_auth.social_uid',
+    'allauth.socialaccount.pipeline.social_auth.auth_allowed',
+    'allauth.socialaccount.pipeline.social_auth.social_user',
+    'path.to.your.views.social_auth_user',  # Add your custom pipeline function here
+    'allauth.socialaccount.pipeline.social_auth.associate_user',
+    'allauth.socialaccount.pipeline.social_auth.load_extra_data',
+    'allauth.socialaccount.pipeline.user.user_details',
 )
 
 SITE_ID = 1

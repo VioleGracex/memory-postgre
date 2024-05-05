@@ -1,3 +1,4 @@
+<!-- profile.html -->
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
@@ -60,7 +61,7 @@
         <div class="custom-container rounded-lg">
             <h2 class="text-center mb-4">{% trans "User Profile" %}</h2>
             <!-- Add options button and context menu structure -->
-            <div class="profile-options ml-auto">
+            <div class="ml-auto">
                 <button id="optionsBtn" class="options-btn">
                     <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
                 </button>
@@ -150,8 +151,9 @@
 
             <!-- Back to Feed Button -->
             <div class="text-center">
-                <a href="{% url 'userfeed' %}" class="btn">{% trans "Back to Feed" %}</a>
+                <a href="{% url 'user_specific_feed' username=custom_user.user.username %}" class="btn">{% trans "Back to Feed" %}</a>
             </div>
+
 
             <!-- Avatar picture input -->
             <input type="file" id="avatarInput" name="avatar" style="display: none;" accept="image/*">
@@ -216,7 +218,7 @@
             clearUploadedImages();
             
             // Redirect to userfeed
-            window.location.href = "{% url 'userfeed' %}";
+            window.location.href = "{% url 'user_specific_feed' username=custom_user.user.username %}";
         }
         // Event listener for save changes button
         document.getElementById('saveChangesBtn').addEventListener('click', handleSaveChanges);

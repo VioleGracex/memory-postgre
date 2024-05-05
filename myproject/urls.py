@@ -38,6 +38,7 @@ urlpatterns =i18n_patterns(
     path('myproject/', include('django.contrib.auth.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
+    path('accounts/social-auth/', views.social_auth_user, name='social_auth_user'),
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

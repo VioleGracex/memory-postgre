@@ -123,48 +123,11 @@
     </div>
 
     <!-- Display user's posts -->       
-    <div class="rounded-lg mx-auto py-12">                       
-        {% for post in user_posts %}
-            <div class="custom-container memory mt-9">
-                <!-- Profile information -->
-                <div class="profile-info flex justify-start mb-4">
-                    <div>
-                        {% if post.user.profile_picture %}
-                            <img src="{{ post.user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="small-profile-avatar">
-                        {% else %}
-                            <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
-                        {% endif %}
-                    </div>
-                    <div class="">
-                        {{ post.user.first_name|default:"" }} {{ post.user.last_name|default:"" }}
-                        <div>
-                            {% if post.location %}
-                                <p class="location text-white">{% trans 'Location' %}: {{ post.location }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="memory-header ml-auto">
-                        <p class="text-sm text-gray-500">{{ post.created_at }}</p>
-                    </div>
-                </div>
-                <!-- Memory content -->
-                <div class="memory-content">
-                    {% if post.text %}
-                        <p>{{ post.text }}</p>
-                    {% endif %}
-                    <div class="media">
-                        {% for image in post.image_set.all %}
-                            <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}">
-                        {% endfor %}
-                        {% for video in post.video_set.all %}
-                            <video controls>
-                                <source src="{{ video.video.url }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+    <!-- Display multiple memories -->
+    <div class="rounded-lg mx-auto py-12">
+        {% for memory in user_memories %}
+            <!-- Include the memory.html template for each memory -->
+            {% include 'memory.html' with memory=memory%}
         {% endfor %}
     </div>
             
