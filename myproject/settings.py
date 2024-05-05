@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.vk',  # if you need VK api
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -106,12 +108,16 @@ AUTHENTICATION_BACKENDS = (
 SOCIALACCOUNT_PROVIDERS = {
     'vk': {
             'APP': {
-                'client_id': '51916679',
-                'secret': '0KCNl4TkiCKOL1cokeFk',
-                'key': '7851d00b7851d00b7851d00b087b49ff8c778517851d00b1e6274b87a2b77066ae0263a'
+                'client_id': '51918237',
+                'secret': 'HikTuiyZs3TnkhLEAuaN',
+                'key': '8d7ad0ee8d7ad0ee8d7ad0ee958e62e57388d7a8d7ad0eeeb4d4adb1d4e6d3df43075dd'
                    }
           },
 }
+
+SOCIALACCOUNT_PIPELINE = (
+    'myproject.pipeline.social_auth_user', 
+)
 
 SITE_ID = 1
 from django.utils.translation import get_language
@@ -119,12 +125,6 @@ from django.utils.translation import get_language
 # Assuming you have access to the request object
 # You need to extract the language code from the request
 language_code = get_language()
-
-# Construct the redirect URI dynamically with the language code
-SOCIAL_AUTH_VK_OAUTH2_REDIRECT_URI = f'https://memorypostgre-vgzdxca4.b4a.run/{language_code}/accounts/vk/login/callback/'
-SOCIAL_AUTH_REDIRECT_URI = 'https://memorypostgre-vgzdxca4.b4a.run'
-SOCIAL_AUTH_VK_OAUTH2_KEY = '51916679'
-SOCIAL_AUTH_VK_OAUTH2_SECRET = '0KCNl4TkiCKOL1cokeFk'
 
 
 
@@ -189,7 +189,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

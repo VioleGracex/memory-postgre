@@ -153,6 +153,28 @@ def login_user(request):
     else:
         return render(request, 'accounts/login.html')
 
+
+# Define the custom pipeline function
+def social_auth_user(request, sociallogin, **kwargs):
+    user = sociallogin.user
+    if sociallogin.account.provider == 'vk-oauth2':
+        # Extract user data from VK
+        vk_data = sociallogin.account.extra_data
+        
+        # Create a custom user object and populate it with VK data
+        custom_user = CustomUser.objects.create(
+            username=vk_data['username'],  # Customize this according to VK data structure
+            first_name=vk_data['first_name'],
+            last_name=vk_data['last_name'],
+            email=vk_data['email'],
+            date_of_birth=vk_data.get('date_of_birth'),  # Assuming 'date_of_birth' is a key in vk_data
+            profile_picture=vk_data.get('profile_picture'),  # Assuming 'profile_picture' is a key in vk_data
+            
+        )
+        # Associate the custom user with the social account
+        sociallogin.connect(request, user=custom_user)
+    return
+
 def logout_user(request):
     logout(request)
     return redirect('home')  # Redirect to the home page after logout

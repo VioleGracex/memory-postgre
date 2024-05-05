@@ -139,7 +139,7 @@ msgstr ""
 
 #: templates/home.html:80
 msgid "Login with VK"
-msgstr "Войти через ВКонтакте"
+msgstr "Войти с помощью VK"
 
 #: templates/language_selector.html:5
 msgid "English"
