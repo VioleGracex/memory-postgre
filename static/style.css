@@ -125,6 +125,28 @@ body {
     border: 1px solid #d4d2d2; /* Add border properties */
 }
 
+.opt{
+    /* Add this property to float the menu to the left */
+    float: right;
+    position: relative;
+}
+.body-black .options-menu{
+    /* Add this property to float the menu to the left */
+    background-color: #141414;
+    color: #fff; /* Text color */
+
+}
+.body-white .options-menu{
+    /* Add this property to float the menu to the left */
+    background-color: #EDEEF0;
+    color: #000; /* Text color */
+}
+
+.options-menu {
+    white-space: nowrap;
+    position: absolute;
+}
+
 /* #endregion */
 
 /* #region memory */

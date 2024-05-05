@@ -39,6 +39,7 @@ urlpatterns =i18n_patterns(
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('accounts/', include('allauth.urls')),
     path('accounts/social-auth/', views.social_auth_user, name='social_auth_user'),
+    path('delete-memory/<int:memory_id>/', views.delete_memory, name='delete_memory'),
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

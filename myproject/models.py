@@ -20,26 +20,6 @@ class CustomUser(models.Model):
     def __str__(self):
         return self.user.username
 
-
-
-"""     groups = models.ManyToManyField(
-        'auth.Group',
-        verbose_name='groups',
-        blank=True,
-        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-        related_name='customuser_groups',  # Unique related_name for groups
-        related_query_name='user',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        verbose_name='user permissions',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        related_name='customuser_user_permissions',  # Unique related_name for user_permissions
-        related_query_name='user',
-    ) """
-
-
 class Memory(models.Model):
     custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True, null=True)
@@ -50,6 +30,12 @@ class Memory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     images = models.ManyToManyField('Image', related_name='memory_images')
     videos = models.ManyToManyField('Video', related_name='memory_videos')
+
+    def delete_memory(self):
+        # Delete the memory instance
+        self.delete()
+        # Save any changes
+        self.custom_user.save()
     
     def __str__(self):
         return f"Memory by {self.user.username} at {self.created_at}"

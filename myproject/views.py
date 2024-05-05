@@ -9,12 +9,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-from .models import CustomUser
+from .models import CustomUser, Memory, UserFeed
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import datetime
 from django.utils.translation import gettext as _
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 #region Utility Functions
 
@@ -225,6 +226,36 @@ def add_to_feed(request):
         messages.error(request, 'Method not allowed.')
         return redirect('user_specific_feed', username=request.user)  # Redirect to user feed page for GET requests
 
+login_required
+@require_POST
+def delete_memory(request, memory_id):
+    # Get the memory object
+    memory = get_object_or_404(Memory, id=memory_id)
+    # Get the CustomUser object associated with the current user
+    custom_user = get_object_or_404(CustomUser, user=request.user)
+
+    try:
+        # Try to get the user feed associated with the current user
+        user_feed = UserFeed.objects.get(user=custom_user)
+    except UserFeed.DoesNotExist:
+        # If the user feed doesn't exist, create a new one
+        user_feed = UserFeed.objects.create(user=custom_user)
+
+    # Check if the current user is the owner of the memory
+    if memory.custom_user == custom_user:
+        # Remove the memory from the user feed
+        if user_feed.remove_memory(memory_id):
+            # If memory successfully removed from the user feed, delete the memory
+            memory.delete()
+            messages.success(request, 'Memory deleted successfully.')
+            return redirect('user_specific_feed', username=request.user)
+        else:
+            messages.error(request, 'Failed to delete memory from user feed.')
+            return redirect('user_specific_feed', username=request.user)
+    else:
+        messages.error(request, 'You are not authorized to delete this memory.')
+
+    return redirect('user_specific_feed', username=request.user)  # Redirect to the memory list page
 #endregion
 
 

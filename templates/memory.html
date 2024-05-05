@@ -1,11 +1,42 @@
 <!-- memory.html -->
 {% load i18n %}
 {% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "User Profile" %}</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet"> <!-- Link static CSS file -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- Link Tailwind CSS -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome Icons -->
+</head>
+<body>
 
-<!-- Display a single memory -->
+<!-- Your memory content -->
 <div class="custom-container memory mt-9">
+    <!-- Hidden form for deleting memory -->
+    <form id="deleteMemoryForm" method="POST" action="{% url 'delete_memory' memory.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="memory_id" id="memoryIdInput">
+    </form>
+    
+    <!-- Add options button and context menu structure -->
+    <div class="opt ">
+        <button id="optionsBtn" class="options-btn">
+            <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
+        </button>
+        <div id="optionsMenu" class="options-menu hidden">
+            <ul>
+                <li class="mt-3"><a href="#" id="editMemoryOption">{% trans "Edit Memory" %}</a></li>
+                <li class="mt-3"><a href="#" id="deleteMemoryOption" onclick="deleteMemory('{{ memory.id }}')">{% trans "Delete Memory" %}</a></li>
+            </ul>
+        </div>
+    </div>
     <!-- Profile information -->
     <div class="flex justify-start mb-4">
+        <!-- Profile picture -->
         <div>
             {% if memory.custom_user.profile_picture %}
                 <img src="{{  memory.custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="small-profile-avatar">
@@ -13,27 +44,19 @@
                 <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
             {% endif %}
         </div>
+        <!-- User name -->
         <div>
             {{ memory.custom_user.user.first_name|default:"" }} {{ memory.custom_user.user.last_name|default:"" }}
+            <!-- Location -->
             <div>
                 {% if memory.location %}
                     <p class="location text-white">{% trans 'Location' %}: {{ memory.location }}</p>
                 {% endif %}
             </div>
         </div>
+        <!-- Memory header -->
         <div class="memory-header ml-auto">
             <p class="text-sm text-gray-500 mr-2">{{ memory.created_at }}</p>
-            <div class="profile-options ml-auto">
-                <button class="options-btn" onclick="toggleOptionsMenu(event)">
-                    <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
-                </button>
-                <div class="options-menu hidden">
-                    <ul>
-                        <li><a href="#" id="editMemoryOption">{% trans "Edit Memory" %}</a></li>
-                        <li><a href="#" id="deleteMemoryOption">{% trans "Delete Memory" %}</a></li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </div>
     <!-- Memory content -->
@@ -41,6 +64,7 @@
         {% if memory.text %}
             <p>{{ memory.text }}</p>
         {% endif %}
+        <!-- Media content -->
         <div class="media">
             {% for image in memory.image_set.all %}
                 <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}">
@@ -53,14 +77,37 @@
             {% endfor %}
         </div>
     </div>
+    {% comment %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %} {% endcomment %}
 </div>
 
 <script>
-    // Function to toggle options menu visibility
-    function toggleOptionsMenu(event) {
-        event.stopPropagation(); // Prevent the click event from bubbling up to document level
-        var optionsMenu = event.target.nextElementSibling;
-        optionsMenu.classList.toggle('hidden');
-        event.preventDefault(); // Prevent the default behavior of the button element
+    function enableEdit(inputId) {
+        var inputField = document.getElementById(inputId);
+        if (inputField.disabled) {
+            inputField.removeAttribute('disabled');
+        } else {
+            inputField.setAttribute('disabled', 'disabled');
+        }
     }
+
+    document.getElementById('optionsBtn').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the click event from bubbling up to document level
+        document.getElementById('optionsMenu').classList.toggle('hidden');
+        event.preventDefault(); // Prevent the default behavior of the button element
+    });
+    
+    function deleteMemory(memoryId) {
+        if (confirm("Are you sure you want to delete this memory?")) {
+            // Set the memory ID in the hidden form
+            document.getElementById('memoryIdInput').value = memoryId;
+            // Submit the form
+            document.getElementById('deleteMemoryForm').submit();
+        }
+    }
+   
 </script>
+
+</body>
+</html>
