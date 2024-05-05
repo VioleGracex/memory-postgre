@@ -101,6 +101,7 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
     'django.contrib.auth.backends.ModelBackend', # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 
