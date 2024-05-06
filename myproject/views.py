@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-from .models import CustomUser, Memory, UserFeed
+from .models import CustomUser, Memory, UserFeed, Image ,Video
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import datetime
@@ -71,11 +71,12 @@ def user_specific_feed(request, user_id):
 
     # Check if the user feed is public or if the current user is the owner
     if custom_user.profile_type == 'public' or request.user == custom_user.user:
-        user_memories = custom_user.memory_set.all()
+        user_memories = custom_user.memory_set.all().order_by('-created_at')
         return render(request, 'user_feed.html', {'custom_user': custom_user, 'user_memories': user_memories})
     else:
         # User feed is private and the current user is not the owner
         return HttpResponseForbidden("You don't have permission to view this user's feed.")
+
 
 
 
@@ -250,15 +251,16 @@ def add_to_profile(request):
                 except ValueError:
                     date_of_birth = None
             
-            custom_user.profile_picture = profile_picture[0] if profile_picture else None
-            
-            custom_user.cover_image = cover_image[0] if cover_image else None
+            if profile_picture:
+                custom_user.profile_picture = profile_picture[0]
 
-            custom_user.bio = bio if bio else None
+            if cover_image:
+                custom_user.cover_image = cover_image[0]
 
-            custom_user.profile_type = profile_type if profile_type else None
-            
-            #print(profile_picture)                
+            if bio:
+                custom_user.bio = bio
+
+            custom_user.profile_type = profile_type if profile_type else None               
             
             custom_user.save()
 
@@ -270,3 +272,44 @@ def add_to_profile(request):
     return redirect('user_specific_feed', user_id=custom_user.id)
 
 
+def edit_memory(request, memory_id):
+    if request.method == 'POST':
+        current_user = request.user
+        custom_user = get_object_or_404(CustomUser, user=current_user)
+        # Retrieve the memory instance
+        memory = Memory.objects.get(pk=memory_id)
+        
+        # Update memory fields with new values from the form
+        text = request.POST.get('memory_text')
+        location = request.POST.get('memory_location')
+        
+        # Check if text and location are not empty before assigning
+        if text is not None:
+            memory.text = text
+        if location:
+            memory.location = location
+        
+        # Clear existing images and videos
+        memory.image_set.all().delete()
+        memory.video_set.all().delete()
+
+        # Add new images and videos
+        images = request.FILES.getlist('images')
+        videos = request.FILES.getlist('videos')
+
+        for image in images:
+            memory.image_set.create(image=image)
+        for video in videos:
+            memory.video_set.create(video=video)
+        
+        messages.success(request, 'Memory updated successfully.')
+
+        # Save the memory instance to apply changes
+        memory.save()
+
+        # Redirect to user profile or memory detail page
+        return redirect('user_specific_feed', user_id=custom_user.id)  # Change 'user_profile' to the appropriate URL name
+    else:
+        # Handle GET request to display the edit form
+        memory = Memory.objects.get(pk=memory_id)
+        return render(request, 'edit_memory.html', {'memory': memory})

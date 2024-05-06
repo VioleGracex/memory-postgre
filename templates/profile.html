@@ -52,7 +52,17 @@
         .custom-container .btn:hover {
             background-color: #0056b3;
         }
-        
+
+        .profile-avatar {
+            width: 100px; /* Adjust profile image size */
+            height: 100px; /* Adjust profile image size */
+            border-radius: 150%; /* Make profile image circular */
+            border: 3px solid #14141491; /* Add border with a distinct color */
+            position: relative;
+
+
+            overflow: hidden; /* Hide anything rendered outside the circle */
+        }
     </style>
 </head>
 
@@ -73,12 +83,12 @@
                     </ul>
                 </div>
             </div>
-            <!-- Profile Picture -->
-            <div class="text-center mb-4">
+            <!-- Profile avatar -->
+            <div class="profile-avatar align-center mt-16">
                 {% if custom_user.profile_picture %}
-                <img id="profilePicture" src="{{ custom_user.profile_picture.url }}" alt="{% trans "Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+                    <img id="profilePicture" src="{{ custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}">
                 {% else %}
-                <img id="profilePicture" src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans "Placeholder Profile Picture" %}" class="w-24 h-24 rounded-full mx-auto">
+                    <img id="profilePicture" src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}"> 
                 {% endif %}
             </div>
             <!-- Profile Information -->

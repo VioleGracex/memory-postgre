@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     <!-- Submit button -->
-                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" class="add-to-feed-btn">
                         {% trans "Add to Feed" %}
                     </button>
                 </div>
@@ -256,14 +256,6 @@
             for (var i = 0; i < files.length; i++) {
                 displayMedia(files[i]);
             }
-        });
-
-        // Event listener for "Cancel" button
-        document.getElementById('cancelBtn').addEventListener('click', function () {
-            // Clear content and media
-            document.getElementById('contentInput').value = '';
-            document.getElementById('locationInput').value = '';
-            document.getElementById('mediabelt').innerHTML = '';
         });
     </script>
 </body>

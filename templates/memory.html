@@ -10,128 +10,237 @@
     <title>{% trans "User Profile" %}</title>
     <link href="{% static 'style.css' %}" rel="stylesheet"> <!-- Link static CSS file -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- Link Tailwind CSS -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome Icons -->
+    <style>
+        .memory-text.with-text {
+            background-color: transparent; /* Remove background color when there's text */
+        }        
+    </style>
 </head>
 <body>
-
-<!-- Your memory content -->
-<div class="custom-container memory mt-9">
-    <!-- Hidden form for deleting memory -->
-    <form id="deleteMemoryForm" method="POST" action="{% url 'delete_memory' memory.id %}">
-        {% csrf_token %}
-        <input type="hidden" name="memory_id" id="memoryIdInput">
-    </form>
-    
-    <!-- Add options button and context menu structure -->
-    <div class="opt ">
-        <button id="optionsBtn" class="options-btn">
-            <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
-        </button>
-        <div id="optionsMenu" class="options-menu hidden">
-            <ul>
-                <li class="mt-3"><a href="#" id="editMemoryOption">{% trans "Edit Memory" %}</a></li>
-                <li class="mt-3"><a href="#" id="deleteMemoryOption" onclick="deleteMemory('{{ memory.id }}')">{% trans "Delete Memory" %}</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- Profile information -->
-    <div class="flex justify-start mb-4">
-        <!-- Profile picture -->
-        <div>
-            {% if memory.custom_user.profile_picture %}
-                <img src="{{  memory.custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="small-profile-avatar">
-            {% else %}
-                <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
-            {% endif %}
-        </div>
-        <!-- User name -->
-        <div>
-            {{ memory.custom_user.user.first_name|default:"" }} {{ memory.custom_user.user.last_name|default:"" }}
-            <!-- Location -->
-            <div>
-                {% if memory.location %}
-                    <p class="location text-white">{% trans 'Location' %}: {{ memory.location }}</p>
-                {% endif %}
+    <!-- Your memory content -->
+    <div class="custom-container memory mt-9">
+        <!-- Hidden form for deleting memory -->
+        <form id="deleteMemoryForm" method="POST" action="{% url 'delete_memory' memory.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="memory_id" id="memoryIdInput">
+        </form>
+        
+        <!-- Add options button and context menu structure -->
+        <div class="opt">
+            <button id="optionsBtn" class="options-btn">
+                <i class="fas fa-ellipsis-v"></i> <!-- Font Awesome icon for three dots -->
+            </button>
+            <div id="memory-optionsMenu" class="options-menu hidden">
+                <ul>
+                    <li class="mt-3"><a href="#" id="editMemoryOption" onclick="enableEditMemoryForm('{{ memory.id }}')">{% trans "Edit Memory" %}</a></li>
+                    <li class="mt-3"><a href="#" id="deleteMemoryOption" onclick="deleteMemory('{{ memory.id }}')">{% trans "Delete Memory" %}</a></li>
+                </ul>
             </div>
         </div>
-        <!-- Memory header -->
-        <div class="memory-header ml-auto">
-            <p class="text-sm text-gray-500 mr-2">{{ memory.created_at }}</p>
-        </div>
-    </div>
-    <!-- Memory content -->
-    <div class="memory-content">
-        {% if memory.text %}
-            <p>{{ memory.text }}</p>
-        {% endif %}
-        <!-- Media content -->
-        <div class="media">
-            {% for image in memory.image_set.all %}
-                <div class="media-item-container">
-                    <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}" class="memory-image">
-                    <!-- Full-screen button for images -->
-                    <button class="full-screen-btn" onclick="toggleFullScreen(this)">
-                        <i class="fas fa-expand"></i> <!-- Font Awesome icon for full-screen -->
-                    </button>
+        <form id="editMemoryForm" method="POST" action="{% url 'edit_memory' memory.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Profile information -->
+            <div class="flex justify-start mb-4">
+                <!-- Profile picture -->
+                <div>
+                    {% if memory.custom_user.profile_picture %}
+                        <img src="{{ memory.custom_user.profile_picture.url }}" alt="{% trans 'Profile Picture' %}" class="profile-avatar-memory">
+                    {% else %}
+                        <img src="{% static 'placeholder_profile_pic.png' %}" alt="{% trans 'Placeholder Profile Picture' %}" class="profile-avatar-memory">
+                    {% endif %}
                 </div>
-            {% endfor %}
-            {% for video in memory.video_set.all %}
-                <video controls class="memory-video">
-                    <source src="{{ video.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% endfor %}
-        </div>
+                <!-- User name -->
+                <div>
+                    {{ memory.custom_user.user.first_name|default:"" }} {{ memory.custom_user.user.last_name|default:"" }}
+                    <!-- Location -->
+                    <div>
+                        {% if memory.location %}
+                            <input type="text" name="memory_location" class="memory_editable_text location text-white memory-text with-text" value="{{ memory.location }}" disabled >
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Memory header -->
+                <div class="memory-header ml-auto">
+                    <p class="text-sm text-gray-500 mr-2">{{ memory.created_at }}</p>
+                </div>
+            </div>
+            <!-- Memory content -->
+            <div class="memory-content">
+                    {% if memory.text %}
+                        <input type="text" name="memory_text" class="memory_editable_text memory-text with-text" value="{{ memory.text }}" disabled>
+                    {% endif %}
+                    <!-- Add other input fields for additional memory attributes -->
+                    <div class="media">
+                        {% for image in memory.image_set.all %}
+                            <div class="media-item-container">
+                                <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}" class="memory-image" onload="compressImage(this)">
+                                <!-- Full-screen button for images -->
+                                <button class="full-screen-btn" onclick="toggleFullScreen(this)">
+                                    <i class="fas fa-expand"></i> <!-- Font Awesome icon for full-screen -->
+                                </button>
+                                <!-- Delete button for images -->
+                                <button id="editItem" class=" mb-6 editItem delete-image-btn hidden" onclick="deleteImage(this)">
+                                    <i class="fas fa-trash"></i> <!-- Font Awesome icon for delete -->
+                                </button>
+                            </div>
+                        {% endfor %}
+                        {% for video in memory.video_set.all %}
+                            <video controls class="memory-video">
+                                <source src="{{ video.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Input to upload images -->
+                    <input style="display: none;" id="mediaInput" type="file" name="images" accept="image/*" multiple>
+
+                    <div class="text-center">
+                        <button type="submit" class="save-btn hidden" id="saveEditBtn">{% trans "Save" %}</button>
+                        <button type="button" class="cancel-btn hidden" id="cancelEditBtn" onclick="cancelEditMemoryForm()">{% trans "Cancel" %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% comment %} {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %} {% endcomment %}
     </div>
+    <script>
+        // Add event listener for DOMContentLoaded event
+        document.addEventListener('DOMContentLoaded', function() {
+            // Your JavaScript code here
+            // For example:
+            document.getElementById('optionsBtn').addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent the click event from bubbling up to document level
+                document.getElementById('memory-optionsMenu').classList.toggle('hidden');
+                event.preventDefault(); // Prevent the default behavior of the button element
+            });
+        });
+    </script>
+    <script>
+        function enableEditMemoryForm(memoryId) {
+            event.preventDefault();
+            // Enable input fields for editing
+            var editableTextElements = document.querySelectorAll('.memory_editable_text');
+        
+            // Loop through all editable text elements
+            editableTextElements.forEach(function(element) {
+                // Remove the disabled attribute from each editable text element
+                element.removeAttribute('disabled');
+            });
+            // Show save and cancel buttons
+            var editItems = document.querySelectorAll('.editItem');
 
-    {% comment %} {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %} {% endcomment %}
-</div>
-
-<script>
-    function enableEdit(inputId) {
-        var inputField = document.getElementById(inputId);
-        if (inputField.disabled) {
-            inputField.removeAttribute('disabled');
-        } else {
-            inputField.setAttribute('disabled', 'disabled');
+            // Loop over each element and remove the hidden class
+            editItems.forEach(function(element) {
+                element.classList.remove('hidden');
+            });
+            document.getElementById('saveEditBtn').classList.remove('hidden');
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            // Hide the "Edit Memory" option
+            document.getElementById('editMemoryOption').style.display = 'none';
         }
-    }
 
-    document.getElementById('optionsBtn').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent the click event from bubbling up to document level
-        document.getElementById('optionsMenu').classList.toggle('hidden');
-        event.preventDefault(); // Prevent the default behavior of the button element
-    });
-    
-    function deleteMemory(memoryId) {
-        if (confirm("Are you sure you want to delete this memory?")) {
-            // Set the memory ID in the hidden form
-            document.getElementById('memoryIdInput').value = memoryId;
-            // Submit the form
-            document.getElementById('deleteMemoryForm').submit();
+        function cancelEditMemoryForm() {
+            event.preventDefault();
+            // Disable input fields
+            var editableTextElements = document.querySelectorAll('.memory_editable_text');
+        
+            // Loop through all editable text elements
+            editableTextElements.forEach(function(element) {
+                // Remove the disabled attribute from each editable text element
+                element.setAttribute('disabled',true);
+            });
+            
+            var editItems = document.querySelectorAll('.editItem');
+            // Loop over each element and remove the hidden class
+            editItems.forEach(function(element) {
+                element.classList.add('hidden');
+            });
+            document.getElementById('saveEditBtn').classList.add('hidden');
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            // Show the "Edit Memory" option
+            document.getElementById('editMemoryOption').style.display = 'block';
         }
-    }
-   
-</script>
 
-<script>
-    // Function to toggle full-screen mode for images
-    function toggleFullScreen(button) {
-        var image = button.previousElementSibling; // Get the image element
-        if (image.requestFullscreen) {
-            if (!document.fullscreenElement) {
-                image.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
+        function deleteImage(imageId) {
+            if (confirm("Are you sure you want to delete this image?")) {
+                // Perform deletion action (e.g., AJAX request)
+            }
+        }
+
+        // Function to toggle full-screen mode for images
+        function toggleFullScreen(button) {
+            event.preventDefault(); // Prevent form submission
+            var image = button.previousElementSibling; // Get the image element
+            if (image.requestFullscreen) {
+                if (!document.fullscreenElement) {
+                    image.requestFullscreen();
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
                 }
             }
         }
-    }
-</script>
 
+        // Function to delete an image
+        function deleteImage(button) {
+            var container = button.parentElement;
+            container.remove();
+        }
+
+        // Function to delete a memory
+        function deleteMemory(memoryId) {
+            if (confirm("Are you sure you want to delete this memory?")) {
+                // Set the memory ID in the hidden form
+                document.getElementById('memoryIdInput').value = memoryId;
+                // Submit the form
+                document.getElementById('deleteMemoryForm').submit();
+            }
+        }
+
+        {% comment %} // Event listener for form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            addFilesToInput('images', '#media'); // Add image names to hidden input before form submission
+        }); {% endcomment %}
+
+        function addFilesToInput(inputId, containerId) {
+            var fileNames = [];
+            var fileElements = document.querySelectorAll(containerId + ' .media-item-container img');
+            fileElements.forEach(function(file) {
+                fileNames.push(file.getAttribute('src'));
+            });
+            document.getElementById(inputId).value = fileNames.join(',');
+        }
+        
+        // Function to compress images
+        function compressImage(image) {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var maxWidth = 800; // Set your desired max width
+            var maxHeight = 600; // Set your desired max height
+
+            // Check if the image needs to be resized
+            if (image.width > maxWidth || image.height > maxHeight) {
+                // Calculate the new width and height while maintaining aspect ratio
+                var ratio = Math.min(maxWidth / image.width, maxHeight / image.height);
+                var newWidth = image.width * ratio;
+                var newHeight = image.height * ratio;
+
+                // Draw the image on the canvas with the new dimensions
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
+                // Replace the original image with the compressed one
+                image.src = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed (0.7 means 70% quality)
+            }
+        }
+    </script>
+   
+    
 
 </body>
 </html>

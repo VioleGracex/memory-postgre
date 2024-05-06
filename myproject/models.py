@@ -10,7 +10,7 @@ class CustomUser(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     cover_image = models.ImageField(upload_to='cover_images/', null=True, blank=True)
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, null=True, default='')
     registration_method = models.CharField(max_length=20, choices=[('social', 'Social Network'), ('normal', 'Normal Registration')])
     last_login = models.DateTimeField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)

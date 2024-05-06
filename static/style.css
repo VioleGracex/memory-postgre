@@ -95,7 +95,13 @@ body {
     border-radius: 50%; /* Make the image circular */
 }
 
-
+  
+.profile-avatar-memory {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    border-radius: 50%; /* Ensure the avatar image is circular */
+    margin-right: 10px; /* Add some space between the avatar and the name */
+}
 
 .profile-container {
     display: flex;
@@ -168,6 +174,29 @@ body {
     position: absolute;
 }
 
+/* Styling for the custom button */
+.add-to-feed-btn {
+    background-color: #0F4C75; /* Green */
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.add-to-feed-btn:hover {
+    background-color: #0C3A55; /* Slightly darker shade of green on hover */
+    color: white;
+}
+
+.body-white .add-to-feed-btn {
+    background-color: #ebf2fa; /* Softer green */
+    color: #379bd7;
+}
+
+.body-white .add-to-feed-btn:hover {
+    background-color: #d4deeb; /* Slightly darker shade of green on hover */
+}
 /* #endregion */
 
 /* #region memory */
@@ -220,6 +249,76 @@ body {
     height: auto;
     margin-top: 10px;
 }
+
+.media-item-container {
+    position: relative; /* Make the container relative to allow absolute positioning of children */
+}
+
+.full-screen-btn {
+    position: absolute;
+    bottom: 10px; /* Adjust bottom position as needed */
+    right: 10px; /* Adjust right position as needed */
+    z-index: 1; /* Ensure full-screen button appears above the delete button */
+}
+
+.delete-image-btn {
+    position: absolute;
+    bottom: 10px; /* Adjust bottom position as needed */
+    left: 10px; /* Adjust left position as needed */
+    z-index: 1; /* Ensure delete button appears above the image */
+}
+
+
+
+/* Styling for the Save button */
+.save-btn {
+    background-color: #0F4C75;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #0C3A55; /* Slightly darker shade */
+    color: white;
+}
+
+/* Styling for the Cancel button */
+.cancel-btn {
+    background-color: #0F4C75;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #0C3A55; /* Slightly darker shade */
+    color: white;
+}
+
+/* Additional styles for white theme */
+.body-white .save-btn {
+    background-color: #ebf2fa; /* Softer green */
+    color: #379bd7;
+}
+
+.body-white .save-btn:hover {
+    background-color: #d4deeb; /* Slightly darker shade of green on hover */
+}
+
+.body-white .cancel-btn {
+    background-color: #ebf2fa; /* Softer green */
+    color: #379bd7;
+}
+
+.body-white .cancel-btn:hover {
+    background-color: #d4deeb; /* Slightly darker shade of green on hover */
+}
+
 /* #endregion */
 
 /* #region base.html */
