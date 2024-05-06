@@ -72,28 +72,28 @@
                     <!-- Add other input fields for additional memory attributes -->
                     <div class="media">
                         {% for image in memory.image_set.all %}
-                            <div class="media-item-container">
-                                <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}" class="memory-image" onload="compressImage(this)">
-                                <!-- Full-screen button for images -->
-                                <button class="full-screen-btn" onclick="toggleFullScreen(this)">
-                                    <i class="fas fa-expand"></i> <!-- Font Awesome icon for full-screen -->
-                                </button>
-                                <!-- Delete button for images -->
-                                <button id="editItem" class=" mb-6 editItem delete-image-btn hidden" onclick="deleteImage(this)">
-                                    <i class="fas fa-trash"></i> <!-- Font Awesome icon for delete -->
-                                </button>
-                            </div>
+                        <div class="media-item-container memory-container" name="{{ image.id }}">
+                            <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}" class="memory-image" onload=" compressImage(this) ">
+                            <!-- Full-screen button for images -->
+                            <button class="full-screen-btn" onclick="toggleFullScreen(this)">
+                                <i class="fas fa-expand"></i> <!-- Font Awesome icon for full-screen -->
+                            </button>
+                            <!-- Delete button for images -->
+                            <button class="mb-6 editItem delete-image-btn hidden" onclick="deleteImage(this)">
+                                <i class="fas fa-trash"></i> <!-- Font Awesome icon for delete -->
+                            </button>
+                        </div>
                         {% endfor %}
                         {% for video in memory.video_set.all %}
                             <video controls class="memory-video">
                                 <source src="{{ video.video.url }}" type="video/mp4">
-                                Your browser does not support the video tag.
+                                {% trans "Your browser does not support the video tag." %}
                             </video>
                         {% endfor %}
                     </div>
 
-                    <!-- Input to upload images -->
-                    <input style="display: none;" id="mediaInput" type="file" name="images" accept="image/*" multiple>
+                    <!-- Hidden input to store IDs of remaining images -->
+                    <input type="hidden" class="fontExceptionBlack" id="remaining_image_ids" name="remaining_image_ids" value="">
 
                     <div class="text-center">
                         <button type="submit" class="save-btn hidden" id="saveEditBtn">{% trans "Save" %}</button>
@@ -107,18 +107,36 @@
         {% endfor %} {% endcomment %}
     </div>
     <script>
-        // Add event listener for DOMContentLoaded event
-        document.addEventListener('DOMContentLoaded', function() {
-            // Your JavaScript code here
-            // For example:
-            document.getElementById('optionsBtn').addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent the click event from bubbling up to document level
-                document.getElementById('memory-optionsMenu').classList.toggle('hidden');
-                event.preventDefault(); // Prevent the default behavior of the button element
+        // JavaScript function to update remaining image IDs
+        function updateRemainingImageIds(memoryContainer) {
+            document.getElementById('remaining_image_ids').value = '';
+            var remainingImageIds = [];
+            var memoryImages = memoryContainer.querySelectorAll('.memory-container'); // Select only images within the provided memory container
+            memoryImages.forEach(function(image) {
+                var imageId = image.getAttribute('name'); // Get the image ID from the name attribute
+                remainingImageIds.push(imageId);
             });
-        });
+            document.getElementById('remaining_image_ids').value = remainingImageIds.join(',');
+        }
+    
+        // Function to delete an image
+        function deleteImage(button) {
+            var container = button.parentElement;
+            container.remove();
+            updateRemainingImageIds(document.querySelector('.media'));
+        }
+    
+        // Call the function initially to set the remaining image IDs
+        updateRemainingImageIds(document.querySelector('.media'));
     </script>
     <script>
+        // For example:
+        document.getElementById('optionsBtn').addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent the click event from bubbling up to document level
+            document.getElementById('memory-optionsMenu').classList.toggle('hidden');
+            event.preventDefault(); // Prevent the default behavior of the button element
+        });
+
         function enableEditMemoryForm(memoryId) {
             event.preventDefault();
             // Enable input fields for editing
@@ -163,13 +181,7 @@
             // Show the "Edit Memory" option
             document.getElementById('editMemoryOption').style.display = 'block';
         }
-
-        function deleteImage(imageId) {
-            if (confirm("Are you sure you want to delete this image?")) {
-                // Perform deletion action (e.g., AJAX request)
-            }
-        }
-
+        
         // Function to toggle full-screen mode for images
         function toggleFullScreen(button) {
             event.preventDefault(); // Prevent form submission
@@ -185,12 +197,6 @@
             }
         }
 
-        // Function to delete an image
-        function deleteImage(button) {
-            var container = button.parentElement;
-            container.remove();
-        }
-
         // Function to delete a memory
         function deleteMemory(memoryId) {
             if (confirm("Are you sure you want to delete this memory?")) {
@@ -201,20 +207,6 @@
             }
         }
 
-        {% comment %} // Event listener for form submission
-        document.querySelector('form').addEventListener('submit', function() {
-            addFilesToInput('images', '#media'); // Add image names to hidden input before form submission
-        }); {% endcomment %}
-
-        function addFilesToInput(inputId, containerId) {
-            var fileNames = [];
-            var fileElements = document.querySelectorAll(containerId + ' .media-item-container img');
-            fileElements.forEach(function(file) {
-                fileNames.push(file.getAttribute('src'));
-            });
-            document.getElementById(inputId).value = fileNames.join(',');
-        }
-        
         // Function to compress images
         function compressImage(image) {
             var canvas = document.createElement('canvas');
@@ -239,8 +231,6 @@
             }
         }
     </script>
-   
-    
 
 </body>
 </html>

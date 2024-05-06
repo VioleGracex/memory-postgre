@@ -270,11 +270,12 @@ def add_to_profile(request):
     return redirect('user_specific_feed', user_id=custom_user.id)
 
 
+from django.core.exceptions import ValidationError
+
 def edit_memory(request, memory_id):
     if request.method == 'POST':
         current_user = request.user
         custom_user = get_object_or_404(CustomUser, user=current_user)
-        # Retrieve the memory instance
         memory = Memory.objects.get(pk=memory_id)
         
         # Update memory fields with new values from the form
@@ -287,27 +288,25 @@ def edit_memory(request, memory_id):
         if location:
             memory.location = location
         
-        # Clear existing images and videos
-        memory.image_set.all().delete()
-        memory.video_set.all().delete()
-
-        # Add new images and videos
-        images = request.FILES.getlist('images')
-        videos = request.FILES.getlist('videos')
-
-        for image in images:
-            memory.image_set.create(image=image)
-        for video in videos:
-            memory.video_set.create(video=video)
+        # Get the IDs of remaining images from the form
+        remaining_image_ids = request.POST.get('remaining_image_ids')  # Comma-separated string of image IDs
+        
+        # Convert comma-separated string to a list of integers
+        try:
+            remaining_image_ids = [int(id) for id in remaining_image_ids.split(',')]
+        except ValueError:
+            raise ValidationError("Invalid image IDs")
+        
+        # Clear existing images not in the remaining list
+        memory.image_set.exclude(id__in=remaining_image_ids).delete()
+        
+        # Save the memory instance
+        memory.save()
         
         messages.success(request, 'Memory updated successfully.')
-
-        # Save the memory instance to apply changes
-        memory.save()
-
-        # Redirect to user profile or memory detail page
-        return redirect('user_specific_feed', user_id=custom_user.id)  # Change 'user_profile' to the appropriate URL name
+        return redirect('user_specific_feed', user_id=custom_user.id)
     else:
-        # Handle GET request to display the edit form
         memory = Memory.objects.get(pk=memory_id)
         return render(request, 'edit_memory.html', {'memory': memory})
+
+    

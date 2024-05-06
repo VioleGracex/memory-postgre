@@ -45,9 +45,22 @@ class Memory(models.Model):
 class Image(models.Model):
     memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='memory_images/')
+    image_id = models.CharField(max_length=50, unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if not self.image_id:
+            # Generate a unique image ID based on the current timestamp
+            timestamp = timezone.now().timestamp()
+            self.image_id = f"IMG-{int(timestamp * 1000)}"
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Image for Memory: {self.memory.id}"
+        return f"Image for Memory: {self.memory.id} (ID: {self.image_id})"
+
+        return f"Image for Memory: {self.memory.id} (ID: {self.image_id})"
+
+
 
 
 class Video(models.Model):
