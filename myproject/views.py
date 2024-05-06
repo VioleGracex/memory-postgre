@@ -30,12 +30,12 @@ from django.views.decorators.http import require_POST
 def home(request):
     return render(request, 'home.html')
 
-def loginpage(request):
-    context = {}
+def loginpage(request, errors=None):
+    context = {'errors': errors}
     return render(request, 'accounts/login.html', context)
 
-def regpage(request):
-    context = {}
+def regpage(request, errors=None):
+    context = {'errors': errors} if errors else {}
     return render(request, 'accounts/reg.html', context)
 
 def admin(request):
@@ -77,9 +77,6 @@ def user_specific_feed(request, user_id):
         # User feed is private and the current user is not the owner
         return HttpResponseForbidden("You don't have permission to view this user's feed.")
 
-
-
-
 User = get_user_model()
 
 def register_user(request):
@@ -88,37 +85,38 @@ def register_user(request):
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         confirm_password = request.POST.get('confirm_password', '')
-        first_name = request.POST.get('first_name', '')  # Get the first name field
+        first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
+
+        errors = []
 
         # Validate the password
         try:
             validate_password(password)
         except ValidationError as e:
-            # Password validation failed, display error message
-            messages.error(request, "\n".join(e))
-            return redirect('regpage')
+            errors.extend(e.messages)
 
         # Check if the password is the same as the username
         if password == username:
-            messages.error(request, "Password cannot be the same as the username.")
-            return redirect('regpage')
+            errors.append("Password cannot be the same as the username.")
 
         if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('regpage')
+            errors.append("Passwords do not match.")
+
+        # Check if the username already exists
+        if User.objects.filter(username=username).exists():
+            errors.append("Username already exists. Please choose a different username.")
+            return redirect('loginpage')
+        if errors:
+            # If there are errors, render the registration page with the error messages
+            return regpage(request, errors)
 
         try:
-            # Check if the username already exists
-            if User.objects.filter(username=username).exists():
-                messages.error(request, "Username already exists. Please choose a different username.")
-                return redirect('regpage')
-
             # Create the default User
             user = User.objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name  # Save the first name to the User model
-            user.last_name = last_name    # Save the last name to the User model
-            user.save()  # Save the user object
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save()
 
             # Create the associated CustomUser object
             custom_user = CustomUser.objects.create(
@@ -133,13 +131,16 @@ def register_user(request):
             # Redirect the user to the login page
             return redirect('loginpage')
         except Exception as e:
-            messages.error(request, f"Error creating user: {e}")
-            return redirect('regpage')
-    else:
-        return redirect('regpage')
+            # If an error occurs during user creation, display the error message
+            errors.append(str(e))
+            return regpage(request, errors)
+
+    # If the request method is not POST, render the registration page
+    return regpage(request, errors)
 
 
 def login_user(request):
+    errors = []
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -149,11 +150,8 @@ def login_user(request):
             custom_user = get_object_or_404(CustomUser, user=request.user)
             return redirect('user_specific_feed', user_id=custom_user.id)
         else:
-            messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('loginpage')
-    else:
-        return redirect('loginpage')
-
+            errors.append("Invalid username or password. Please try again.")
+    return loginpage(request, errors)
 
 # Define the custom pipeline function
 def social_auth_user(request, sociallogin, **kwargs):
@@ -192,8 +190,8 @@ def add_to_feed(request):
         current_user = request.user
         custom_user = get_object_or_404(CustomUser, user=current_user)
         if custom_user:
-            content = request.POST.get('content')
-            location = request.POST.get('location', 'Default location')
+            content = request.POST.get('content','')
+            location = request.POST.get('location','')
             images = request.FILES.getlist('images')
             videos = request.FILES.getlist('videos')
 
