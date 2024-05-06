@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-03 22:41+0500\n"
+"POT-Creation-Date: 2024-05-07 01:56+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,96 +17,112 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: templates/accounts/login.html:11 templates/accounts/reg.html:9
-#: templates/accounts/reg.html:118 templates/home.html:33
-msgid "Login"
+
+#: myproject/settings.py:186 templates/language_selector.html:5
+msgid "English"
 msgstr ""
 
-#: templates/accounts/login.html:95
+#: myproject/settings.py:187 templates/language_selector.html:7
+msgid "Russian"
+msgstr ""
+
+#: myproject/views.py:265
+msgid "Changes added to your profile successfully."
+msgstr ""
+
+#: myproject/views.py:267
+msgid "CustomUser not found."
+msgstr ""
+
+#: templates/accounts/login.html:35
 msgid "LOGIN"
 msgstr ""
 
-#: templates/accounts/login.html:104
+#: templates/accounts/login.html:53
 msgid "Username..."
 msgstr ""
 
-#: templates/accounts/login.html:110
+#: templates/accounts/login.html:59
 msgid "Password..."
 msgstr ""
 
-#: templates/accounts/login.html:114
+#: templates/accounts/login.html:63
 msgid "Log in"
 msgstr ""
 
-#: templates/accounts/login.html:121
+#: templates/accounts/login.html:70
 msgid "Don't have an account?"
 msgstr ""
 
-#: templates/accounts/login.html:126 templates/home.html:41
+#: templates/accounts/login.html:75 templates/home.html:40
 msgid "Register"
 msgstr ""
 
-#: templates/accounts/reg.html:68
+#: templates/accounts/reg.html:34
 msgid "REGISTER ACCOUNT"
 msgstr ""
 
-#: templates/accounts/reg.html:77
+#: templates/accounts/reg.html:53 templates/profile.html:98
 msgid "Username"
 msgstr ""
 
-#: templates/accounts/reg.html:83
+#: templates/accounts/reg.html:59
 msgid "First Name"
 msgstr ""
 
-#: templates/accounts/reg.html:84
+#: templates/accounts/reg.html:60
 msgid "Last Name"
 msgstr ""
 
-#: templates/accounts/reg.html:91
+#: templates/accounts/reg.html:67 templates/profile.html:102
 msgid "Email"
 msgstr ""
 
-#: templates/accounts/reg.html:97
+#: templates/accounts/reg.html:73
 msgid "Password"
 msgstr ""
 
-#: templates/accounts/reg.html:103
+#: templates/accounts/reg.html:79
 msgid "Confirm Password"
 msgstr ""
 
-#: templates/accounts/reg.html:107
+#: templates/accounts/reg.html:83
 msgid "Register Account"
 msgstr ""
 
-#: templates/accounts/reg.html:114
+#: templates/accounts/reg.html:90
 msgid "Already have an account?"
 msgstr ""
 
-#: templates/accounts/reg.html:134
+#: templates/accounts/reg.html:94 templates/home.html:33
+msgid "Login"
+msgstr ""
+
+#: templates/accounts/reg.html:110
 msgid "Username.."
 msgstr ""
 
-#: templates/accounts/reg.html:135
+#: templates/accounts/reg.html:111
 msgid "first name.."
 msgstr ""
 
-#: templates/accounts/reg.html:136
+#: templates/accounts/reg.html:112
 msgid "Last Name.."
 msgstr ""
 
-#: templates/accounts/reg.html:137
+#: templates/accounts/reg.html:113
 msgid "Email.."
 msgstr ""
 
-#: templates/accounts/reg.html:138
+#: templates/accounts/reg.html:114
 msgid "Enter password..."
 msgstr ""
 
-#: templates/accounts/reg.html:139
+#: templates/accounts/reg.html:115
 msgid "Re-enter Password..."
 msgstr ""
 
-#: templates/home.html:14 templates/home.html:27
+#: templates/home.html:12 templates/home.html:27
 msgid "Welcome to MemoryMap"
 msgstr ""
 
@@ -114,81 +130,135 @@ msgstr ""
 msgid "A place to store and cherish your memories of visited locations."
 msgstr ""
 
-#: templates/home.html:49
-#, python-format
-msgid ""
-"Please sign in with one\n"
-"                        of your existing third party accounts. Or, <a "
-"href=\"%(signup_url)s\">sign up</a>\n"
-"                        for a %(site_name)s account and sign in below:"
+#: templates/home.html:47
+msgid "Login via VKontakte"
 msgstr ""
 
-#: templates/home.html:59
-msgid "or"
+#: templates/memory.html:10 templates/profile.html:13 templates/profile.html:73
+msgid "User Profile"
 msgstr ""
 
-#: templates/home.html:66
-#, python-format
-msgid ""
-"If you have not created an account yet, then please\n"
-"                    <a href=\"%(signup_url)s\">sign up</a> first."
+#: templates/memory.html:35
+msgid "Edit Memory"
 msgstr ""
 
-#: templates/home.html:80
-msgid "Login with VK"
+#: templates/memory.html:36
+msgid "Delete Memory"
 msgstr ""
 
-#: templates/language_selector.html:5
-msgid "English"
+#: templates/memory.html:47 templates/profile.html:89
+#: templates/user_feed.html:38
+msgid "Profile Picture"
 msgstr ""
 
-#: templates/language_selector.html:7
-msgid "Russian"
+#: templates/memory.html:49 templates/profile.html:91
+#: templates/user_feed.html:42
+msgid "Placeholder Profile Picture"
+msgstr ""
+
+#: templates/memory.html:76
+msgid "Memory Image"
+msgstr ""
+
+#: templates/memory.html:90
+msgid "Your browser does not support the video tag."
+msgstr ""
+
+#: templates/memory.html:99
+msgid "Save"
+msgstr ""
+
+#: templates/memory.html:100
+msgid "Cancel"
+msgstr ""
+
+#: templates/profile.html:81 templates/user_feed.html:102
+msgid "Change Avatar Picture"
+msgstr ""
+
+#: templates/profile.html:82 templates/user_feed.html:107
+msgid "Change Cover Picture"
+msgstr ""
+
+#: templates/profile.html:106
+msgid "Date of Birth"
+msgstr ""
+
+#: templates/profile.html:115
+msgid "Registration Method"
+msgstr ""
+
+#: templates/profile.html:119
+msgid "Email Verified"
+msgstr ""
+
+#: templates/profile.html:123
+msgid "Profile Type"
+msgstr ""
+
+#: templates/profile.html:125
+msgid "Private"
+msgstr ""
+
+#: templates/profile.html:126
+msgid "Public"
+msgstr ""
+
+#: templates/profile.html:133
+msgid "Social Network IDs"
+msgstr ""
+
+#: templates/profile.html:141
+msgid "No social network IDs available."
+msgstr ""
+
+#: templates/profile.html:146
+msgid "Bio"
+msgstr ""
+
+#: templates/profile.html:155
+msgid "Save Changes"
+msgstr ""
+
+#: templates/profile.html:159
+msgid "Cancel Changes"
+msgstr ""
+
+#: templates/profile.html:165
+msgid "Back to Feed"
 msgstr ""
 
 #: templates/user_feed.html:13
 msgid "User Feed"
 msgstr ""
 
-#: templates/user_feed.html:36 templates/user_feed.html:131
-msgid "Profile Picture"
-msgstr ""
-
-#: templates/user_feed.html:39 templates/user_feed.html:133
-msgid "Placeholder Profile Picture"
-msgstr ""
-
-#: templates/user_feed.html:51
+#: templates/user_feed.html:55
 msgid "Placeholder"
 msgstr ""
 
-#: templates/user_feed.html:63
+#: templates/user_feed.html:68
 msgid "Logout"
 msgstr ""
 
-#: templates/user_feed.html:79
+#: templates/user_feed.html:84
 msgid "No location"
 msgstr ""
 
-#: templates/user_feed.html:80
+#: templates/user_feed.html:85
 msgid "Add to feed..."
 msgstr ""
 
-#: templates/user_feed.html:96 templates/user_feed.html:98
+#: templates/user_feed.html:103 templates/user_feed.html:105
+#: templates/user_feed.html:111 templates/user_feed.html:113
 msgid "Photo"
 msgstr ""
 
-#: templates/user_feed.html:101 templates/user_feed.html:103
-#: templates/user_feed.html:140
+#: templates/user_feed.html:116 templates/user_feed.html:118
 msgid "Location"
 msgstr ""
 
-#: templates/user_feed.html:110
+#: templates/user_feed.html:125
 msgid "Add to Feed"
-msgstr ""
-
-#: templates/user_feed.html:155
-msgid "Memory Image"
 msgstr ""
 
 #: templates/yandex_map.html:8 templates/yandex_map_popup.html:8
