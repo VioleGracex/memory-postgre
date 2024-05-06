@@ -67,16 +67,23 @@
         <!-- Media content -->
         <div class="media">
             {% for image in memory.image_set.all %}
-                <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}">
+                <div class="media-item-container">
+                    <img src="{{ image.image.url }}" alt="{% trans 'Memory Image' %}" class="memory-image">
+                    <!-- Full-screen button for images -->
+                    <button class="full-screen-btn" onclick="toggleFullScreen(this)">
+                        <i class="fas fa-expand"></i> <!-- Font Awesome icon for full-screen -->
+                    </button>
+                </div>
             {% endfor %}
             {% for video in memory.video_set.all %}
-                <video controls>
+                <video controls class="memory-video">
                     <source src="{{ video.video.url }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             {% endfor %}
         </div>
     </div>
+
     {% comment %} {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %} {% endcomment %}
@@ -108,6 +115,23 @@
     }
    
 </script>
+
+<script>
+    // Function to toggle full-screen mode for images
+    function toggleFullScreen(button) {
+        var image = button.previousElementSibling; // Get the image element
+        if (image.requestFullscreen) {
+            if (!document.fullscreenElement) {
+                image.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    }
+</script>
+
 
 </body>
 </html>

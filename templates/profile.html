@@ -155,12 +155,12 @@
                 <a href="{% url 'user_specific_feed' user_id=custom_user.id %}" class="btn">{% trans "Back to Feed" %}</a>
             </div>
 
-
             <!-- Avatar picture input -->
-            <input type="file" id="avatarInput" name="avatar" style="display: none;" accept="image/*">
+            <input style="display: none;" id="avatarInput" type="file" name="profileAvatar" accept="image/*" >
+            
 
             <!-- Cover picture input -->
-            <input type="file" id="coverInput" name="cover" style="display: none;" accept="image/*">
+            <input style="display: none;" id="coverInput" type="file" name="coverImg" accept="image/*" >
         </div>
     </form> 
 
@@ -199,33 +199,25 @@
             }
         });
 
-        // Function to clear uploaded images
-        function clearUploadedImages() {
-            document.getElementById('avatarInput').value = '';
-            document.getElementById('coverInput').value = '';
-        }
-
-        // Function to handle save changes button click
-        function handleSaveChanges() {
-            // Your save changes logic here
-
-            // Clear uploaded images
-            clearUploadedImages();
-        }
-
         // Function to handle cancel changes button click
         function handleCancelChanges() {
-            // Clear uploaded images
-            clearUploadedImages();
-            
             // Redirect to userfeed
             window.location.href = "{% url 'user_specific_feed' user_id=custom_user.id %}";
         }
-        // Event listener for save changes button
-        document.getElementById('saveChangesBtn').addEventListener('click', handleSaveChanges);
 
         // Event listener for cancel changes button
         document.getElementById('cancelChangesBtn').addEventListener('click', handleCancelChanges);
+
+        function uploadAvatar()
+        {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById('avatarInput').click(); // Trigger the file input
+        }
+        function uploadCover()
+        {
+            event.preventDefault(); // Prevent the default link behavior
+            document.getElementById('coverInput').click(); // Trigger the file input
+        }
         
        
     </script>

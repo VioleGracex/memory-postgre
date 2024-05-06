@@ -237,9 +237,9 @@ def add_to_profile(request):
     if request.method == 'POST':
         current_user = request.user
         custom_user = get_object_or_404(CustomUser, user=current_user)
-        if custom_user:
-            profile_picture = request.FILES.get('avatar')
-            cover_image = request.FILES.get('cover')
+        if custom_user:  
+            profile_picture = request.FILES.getlist('profileAvatar')
+            cover_image = request.FILES.getlist('coverImg')
             date_of_birth = request.POST.get('date_of_birth')
             bio = request.POST.get('bio')
             profile_type = request.POST.get('profile_type')
@@ -249,16 +249,16 @@ def add_to_profile(request):
                     date_of_birth = datetime.strptime(date_of_birth, '%Y-%m-%d').date()
                 except ValueError:
                     date_of_birth = None
-            if profile_picture is not None:
-                custom_user.profile_picture = profile_picture
-            if cover_image is not None:
-                custom_user.cover_image = cover_image
-            if date_of_birth is not None:
-                custom_user.date_of_birth = date_of_birth
-            if bio is not None:
-                custom_user.bio = bio
-            if profile_type is not None:
-                custom_user.profile_type = profile_type
+            
+            custom_user.profile_picture = profile_picture[0] if profile_picture else None
+            
+            custom_user.cover_image = cover_image[0] if cover_image else None
+
+            custom_user.bio = bio if bio else None
+
+            custom_user.profile_type = profile_type if profile_type else None
+            
+            #print(profile_picture)                
             
             custom_user.save()
 

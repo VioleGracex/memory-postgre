@@ -19,6 +19,8 @@
     <!-- Include Emoji Picker library -->
     <link href="https://cdn.jsdelivr.net/npm/emoji-picker-element@latest/dist/index.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@latest/dist/index.js" defer></script>
+    <link rel="icon" href="data:;base64,=">
+    
 </head>
 
 <body>
@@ -95,6 +97,16 @@
                 <div class="mt-4 flex justify-between">
                     <div id="page_add_media" class="page_add_media">
                         <div class="media_selector clear_fix">
+                            <div id="optionsMenu" class="options-menu hidden">
+                                <ul>
+                                    <li class="mt-3"><a href="#" id="changeAvatarOption">{% trans "Change Avatar Picture" %}</a></li>
+                                    <button type="button"  onclick="uploadAvatar()" class="ms_item ms_item_photo _type_photo mr-4" tabindex="0" data-title="{% trans 'Photo' %}" aria-label="{% trans 'Photo' %}" role="link" id="changeAvatarOption">
+                                        <i class="fas fa-camera"></i>
+                                        <span class="blind_label">{% trans 'Photo' %}</span>
+                                    </button>
+                                    <li class="mt-3"><a href="#" id="changeCoverOption">{% trans "Change Cover Picture" %}</a></li>
+                                </ul>
+                            </div>
                             <!-- Camera button -->
                             <button type="button" class="ms_item ms_item_photo _type_photo mr-4" tabindex="0" data-title="{% trans 'Photo' %}" aria-label="{% trans 'Photo' %}" role="link" id="uploadMediaBtn">
                                 <i class="fas fa-camera"></i>
@@ -131,7 +143,7 @@
             {% include 'memory.html' with memory=memory%}
         {% endfor %}
     </div>
-            
+           
     <script>
         function openMapPopup() {
             var mapPopup = document.getElementById("mapPopup");
@@ -152,24 +164,34 @@
     
    <!-- JavaScript to handle media uploading and memory saving -->
     <script>  
-        // Function to handle adding images and videos to the hidden input fields
-        function addFilesToInput(inputId, containerId) {
-            var fileNames = [];
-            var fileElements = document.querySelectorAll(containerId + ' .media-item');
-            fileElements.forEach(function(file) {
-                fileNames.push(file.getAttribute('data-file-name'));
-            });
-            document.getElementById(inputId).value = fileNames.join(',');
-        }
-
-        // Event listener for form submission
-        document.querySelector('form').addEventListener('submit', function() {
-            addFilesToInput('images', '#media'); // Add image names to hidden input before form submission
-            addFilesToInput('videos', '#videoBelt'); // Add video names to hidden input before form submission
-        });
+        
         // Function to handle media uploading
         function uploadMedia() {
             document.getElementById('images').click();
+        }
+
+        // Function to create a delete button
+        function createDeleteButton(container) {
+            var deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('delete-btn'); // Initially hidden
+            deleteBtn.innerHTML = '&times;'; // Unicode multiplication symbol (×) for delete
+            deleteBtn.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default behavior (i.e., redirection)
+                container.remove(); // Remove the media item container
+            });
+            return deleteBtn;
+        }
+
+        // Function to create a full-screen button
+        function createFullScreenButton(img) {
+            var fullScreenBtn = document.createElement('button');
+            fullScreenBtn.classList.add('full-screen-btn'); // Initially hidden
+            fullScreenBtn.innerHTML = '&#x26F6;'; // Unicode arrow for full-screen
+            fullScreenBtn.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default behavior (i.e., redirection)
+                img.requestFullscreen(); // Display image in full-screen
+            });
+            return fullScreenBtn;
         }
 
         // Function to display uploaded media (image or video)
@@ -179,22 +201,25 @@
 
             // Check if the file is an image
             if (file.type.startsWith('image/')) {
+                var imgContainer = document.createElement('div');
+                imgContainer.classList.add('media-item-wrapper');
+
                 var img = document.createElement('img');
                 img.classList.add('media-item');
                 img.file = file;
                 img.src = URL.createObjectURL(file);
 
-                // Create the full-screen button for images
-                var fullScreenBtn = document.createElement('button');
-                fullScreenBtn.classList.add('full-screen-btn');
-                fullScreenBtn.innerHTML = '&#x26F6;'; // Unicode arrow for full-screen
-                fullScreenBtn.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default behavior (i.e., redirection)
-                    img.requestFullscreen(); // Display image in full-screen
-                });
+                // Append the image to its container
+                imgContainer.appendChild(img);
+                container.appendChild(imgContainer);
 
-                container.appendChild(img);
-                container.appendChild(fullScreenBtn);
+                // Create and append delete button
+                var deleteBtn = createDeleteButton(imgContainer);
+                imgContainer.appendChild(deleteBtn);
+
+                // Create and append full-screen button
+                var fullScreenBtn = createFullScreenButton(img);
+                imgContainer.appendChild(fullScreenBtn);
             }
             // Check if the file is a video
             else if (file.type.startsWith('video/')) {
@@ -204,12 +229,20 @@
                 video.src = URL.createObjectURL(file);
                 video.controls = true; // Show video controls
 
-                container.appendChild(video);
+                // Append the video to its container
+                videoContainer.appendChild(video);
+                container.appendChild(videoContainer);
+
+                // Create and append delete button for videos
+                var deleteBtn = createDeleteButton(videoContainer);
+                videoContainer.appendChild(deleteBtn);
             }
 
             // Append the container to the media belt
             document.getElementById('mediabelt').insertBefore(container, document.getElementById('uploadBtnContainer'));
         }
+
+
 
         // Event listener for the upload media button
         document.getElementById('uploadMediaBtn').addEventListener('click', function () {

@@ -61,20 +61,40 @@ body {
 .profile-avatar {
     width: 150px; /* Adjust profile image size */
     height: 150px; /* Adjust profile image size */
-    border-radius: 50%; /* Make profile image circular */
+    border-radius: 150%; /* Make profile image circular */
+    border: 3px solid #14141491; /* Add border with a distinct color */
     position: absolute;
-    bottom: -75px; /* Adjust position to center vertically */
+    top: 100%; /* Center vertically */
     left: 50%; /* Center horizontally */
-    transform: translateX(-50%);
-    border: 3px solid #fff; /* Add white border */
+    transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+    overflow: hidden; /* Hide anything rendered outside the circle */
+}
+.avatar-link {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-.profile-avatar-memory {
-    width: 30px; /* Adjust the width as needed */
-    height: 30px; /* Adjust the height as needed */
-    border-radius: 50%; /* Ensure the avatar image is circular */
-    margin-right: 10px; /* Add some space between the avatar and the name */
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
 }
+
+.avatar-image.placeholder {
+    background-color: #f0f0f0; /* Placeholder background color */
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 50%; /* Ensure placeholder image is circular */
+}
+
+.avatar-image img {
+    width: 100%; /* Ensure the image fills the avatar container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 50%; /* Make the image circular */
+}
+
 
 
 .profile-container {
@@ -88,8 +108,9 @@ body {
 }
 
 .ms_item:hover .blind_label {
-    display: block;
+    display: block !important; /* Increase specificity and add !important */
 }
+
 
 .blind_label {
     display: none;
@@ -177,6 +198,22 @@ body {
     color: #666;
 }
 
+.media {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-gap: 10px;
+}
+
+.memory-image {
+    max-width: calc(100% / 3 - 10px); /* Adjust the percentage and gap as needed */
+    height: auto;
+}
+
+.memory-video {
+    max-width: calc(100% / 3 - 10px); /* Adjust the percentage and gap as needed */
+    height: auto;
+}
+
 .media img,
 .media video {
     max-width: 100%;
@@ -225,7 +262,7 @@ body {
     background: transparent;
     bottom: 1px; /* Adjust bottom position as needed */
     right: 1px; /* Adjust right position as needed */
-    color: blue;
+    color: #0F4C75;
     font-size: 24px; 
     width: 40px; 
     height: 40px; 
