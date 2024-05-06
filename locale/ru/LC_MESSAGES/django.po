@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-03 23:40+0500\n"
+"POT-Creation-Date: 2024-05-07 01:37+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,96 +20,111 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: templates/accounts/login.html:11 templates/accounts/reg.html:9
-#: templates/accounts/reg.html:118 templates/home.html:33
-msgid "Login"
-msgstr "Войти"
+#: myproject/settings.py:186 templates/language_selector.html:5
+msgid "English"
+msgstr "Английский"
 
-#: templates/accounts/login.html:95
+#: myproject/settings.py:187 templates/language_selector.html:7
+msgid "Russian"
+msgstr "Русский"
+
+#: myproject/views.py:265
+msgid "Changes added to your profile successfully."
+msgstr "Изменения успешно добавлены в ваш профиль."
+
+#: myproject/views.py:267
+msgid "CustomUser not found."
+msgstr "Пользователь не найден."
+
+#: templates/accounts/login.html:35
 msgid "LOGIN"
 msgstr "ВОЙТИ"
 
-#: templates/accounts/login.html:104
+#: templates/accounts/login.html:53
 msgid "Username..."
 msgstr "Имя пользователя.."
 
-#: templates/accounts/login.html:110
+#: templates/accounts/login.html:59
 msgid "Password..."
 msgstr "Пароль..."
 
-#: templates/accounts/login.html:114
+#: templates/accounts/login.html:63
 msgid "Log in"
 msgstr "Войти"
 
-#: templates/accounts/login.html:121
+#: templates/accounts/login.html:70
 msgid "Don't have an account?"
 msgstr "Нет аккаунта?"
 
-#: templates/accounts/login.html:126 templates/home.html:41
+#: templates/accounts/login.html:75 templates/home.html:40
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#: templates/accounts/reg.html:68
+#: templates/accounts/reg.html:34
 msgid "REGISTER ACCOUNT"
 msgstr "ЗАРЕГИСТРИРОВАТЬ АККАУНТ"
 
-#: templates/accounts/reg.html:77 templates/profile.html:70
+#: templates/accounts/reg.html:53 templates/profile.html:98
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: templates/accounts/reg.html:83
+#: templates/accounts/reg.html:59
 msgid "First Name"
 msgstr "Имя"
 
-#: templates/accounts/reg.html:84
+#: templates/accounts/reg.html:60
 msgid "Last Name"
 msgstr "Фамилия"
 
-#: templates/accounts/reg.html:91 templates/profile.html:71
+#: templates/accounts/reg.html:67 templates/profile.html:102
 msgid "Email"
 msgstr "Почта"
 
-#: templates/accounts/reg.html:97
+#: templates/accounts/reg.html:73
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/accounts/reg.html:103
+#: templates/accounts/reg.html:79
 msgid "Confirm Password"
 msgstr "Подтвердите пароль"
 
-#: templates/accounts/reg.html:107
+#: templates/accounts/reg.html:83
 msgid "Register Account"
 msgstr "Зарегистрировать аккаунт"
 
-#: templates/accounts/reg.html:114
+#: templates/accounts/reg.html:90
 msgid "Already have an account?"
 msgstr "Уже есть аккаунт?"
 
-#: templates/accounts/reg.html:134
+#: templates/accounts/reg.html:94 templates/home.html:33
+msgid "Login"
+msgstr "Войти"
+
+#: templates/accounts/reg.html:110
 msgid "Username.."
 msgstr "Имя пользователя.."
 
-#: templates/accounts/reg.html:135
+#: templates/accounts/reg.html:111
 msgid "first name.."
 msgstr "Имя.."
 
-#: templates/accounts/reg.html:136
+#: templates/accounts/reg.html:112
 msgid "Last Name.."
 msgstr "Фамилия.."
 
-#: templates/accounts/reg.html:137
+#: templates/accounts/reg.html:113
 msgid "Email.."
 msgstr "Почта.."
 
-#: templates/accounts/reg.html:138
+#: templates/accounts/reg.html:114
 msgid "Enter password..."
 msgstr "Введите пароль.."
 
-#: templates/accounts/reg.html:139
+#: templates/accounts/reg.html:115
 msgid "Re-enter Password..."
 msgstr "Повторно введите пароль..."
 
-#: templates/home.html:14 templates/home.html:27
+#: templates/home.html:12 templates/home.html:27
 msgid "Welcome to MemoryMap"
 msgstr "Добро пожаловать в MemoryMap"
 
@@ -117,102 +132,107 @@ msgstr "Добро пожаловать в MemoryMap"
 msgid "A place to store and cherish your memories of visited locations."
 msgstr "Место для хранения и дорогих воспоминаний о посещенных местах."
 
-#: templates/home.html:49
-#, python-format
-msgid ""
-"Please sign in with one\n"
-"                        of your existing third party accounts. Or, <a "
-"href=\"%(signup_url)s\">sign up</a>\n"
-"                        for a %(site_name)s account and sign in below:"
-msgstr ""
-
-#: templates/home.html:59
-msgid "or"
-msgstr ""
-
-#: templates/home.html:66
-#, python-format
-msgid ""
-"If you have not created an account yet, then please\n"
-"                    <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
-
-#: templates/home.html:80
-msgid "Login with VK"
+#: templates/home.html:47
+#, fuzzy
+#| msgid "Login with VK"
+msgid "Login via VKontakte"
 msgstr "Войти с помощью VK"
 
-#: templates/language_selector.html:5
-msgid "English"
-msgstr "Английский"
-
-#: templates/language_selector.html:7
-msgid "Russian"
-msgstr "Русский"
-
-#: templates/profile.html:13 templates/profile.html:59
+#: templates/memory.html:10 templates/profile.html:13 templates/profile.html:73
 msgid "User Profile"
-msgstr ""
+msgstr "Профиль пользователя"
 
-#: templates/profile.html:63 templates/user_feed.html:36
-#: templates/user_feed.html:132
+#: templates/memory.html:35
+msgid "Edit Memory"
+msgstr "Редактировать воспоминание"
+
+#: templates/memory.html:36
+#, fuzzy
+#| msgid "Welcome to MemoryMap"
+msgid "Delete Memory"
+msgstr "Добро пожаловать в MemoryMap"
+
+#: templates/memory.html:47 templates/profile.html:89
+#: templates/user_feed.html:38
 msgid "Profile Picture"
 msgstr "Аватар"
 
-#: templates/profile.html:65 templates/user_feed.html:40
-#: templates/user_feed.html:134
+#: templates/memory.html:49 templates/profile.html:91
+#: templates/user_feed.html:42
 msgid "Placeholder Profile Picture"
 msgstr "Заглушка аватара"
 
-#: templates/profile.html:72
+#: templates/memory.html:76
+msgid "Memory Image"
+msgstr "Изображение воспоминания"
+
+#: templates/memory.html:90
+msgid "Your browser does not support the video tag."
+msgstr "Ваш браузер не поддерживает тег видео."
+
+#: templates/memory.html:99
+msgid "Save"
+msgstr "Сохранить"
+
+#: templates/memory.html:100
+msgid "Cancel"
+msgstr "Отменить"
+
+#: templates/profile.html:81 templates/user_feed.html:102
+msgid "Change Avatar Picture"
+msgstr "Изменить изображение аватара"
+
+#: templates/profile.html:82 templates/user_feed.html:107
+msgid "Change Cover Picture"
+msgstr "Изменить изображение обложки"
+
+#: templates/profile.html:106
 msgid "Date of Birth"
-msgstr ""
+msgstr "Дата рождения"
 
-#: templates/profile.html:73
+#: templates/profile.html:115
 msgid "Registration Method"
-msgstr ""
+msgstr "Метод регистрации"
 
-#: templates/profile.html:74
+#: templates/profile.html:119
 msgid "Email Verified"
-msgstr ""
+msgstr "почта подтверждена"
 
-#: templates/profile.html:74
-msgid "Yes"
-msgstr ""
-
-#: templates/profile.html:74
-msgid "No"
-msgstr ""
-
-#: templates/profile.html:75
+#: templates/profile.html:123
 #, fuzzy
-#| msgid "Login"
-msgid "Last Login"
-msgstr "Войти"
-#: templates/profile.html:76
-msgid "Two-Factor Authentication"
-msgstr "Двухфакторная аутентификация"
+#| msgid "Profile Picture"
+msgid "Profile Type"
+msgstr "Тип профиля"
 
-#: templates/profile.html:76
-msgid "Enabled"
-msgstr "Включено"
+#: templates/profile.html:125
+msgid "Private"
+msgstr "Приватный"
 
-#: templates/profile.html:76
-msgid "Disabled"
-msgstr "Отключено"
+#: templates/profile.html:126
+msgid "Public"
+msgstr "Публичный"
 
-#: templates/profile.html:80
+#: templates/profile.html:133
 msgid "Social Network IDs"
 msgstr "Идентификаторы социальных сетей"
 
-#: templates/profile.html:88
+#: templates/profile.html:141
 msgid "No social network IDs available."
 msgstr "Нет доступных идентификаторов социальных сетей."
 
-#: templates/profile.html:93
+#: templates/profile.html:146
 msgid "Bio"
 msgstr "Биография"
 
-#: templates/profile.html:98
+#: templates/profile.html:155
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: templates/profile.html:159
+msgid "Cancel Changes"
+msgstr "Отменить изменения"
+
+#: templates/profile.html:165
 #, fuzzy
 #| msgid "Add to Feed"
 msgid "Back to Feed"
@@ -222,38 +242,49 @@ msgstr "Добавить в ленту"
 msgid "User Feed"
 msgstr "Лента пользователя"
 
-#: templates/user_feed.html:64
+#: templates/user_feed.html:55
+msgid "Placeholder"
+msgstr "Заглушка"
+
+#: templates/user_feed.html:68
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/user_feed.html:80
+#: templates/user_feed.html:84
 msgid "No location"
 msgstr "Нет местоположения"
 
-#: templates/user_feed.html:81
+#: templates/user_feed.html:85
 msgid "Add to feed..."
 msgstr "Добавить в ленту..."
 
-#: templates/user_feed.html:97 templates/user_feed.html:99
+#: templates/user_feed.html:103 templates/user_feed.html:105
+#: templates/user_feed.html:111 templates/user_feed.html:113
 msgid "Photo"
 msgstr "Фото"
 
-#: templates/user_feed.html:102 templates/user_feed.html:104
-#: templates/user_feed.html:141
+#: templates/user_feed.html:116 templates/user_feed.html:118
 msgid "Location"
 msgstr "Местоположение"
 
-#: templates/user_feed.html:111
+#: templates/user_feed.html:125
 msgid "Add to Feed"
 msgstr "Добавить в ленту"
-
-#: templates/user_feed.html:156
-msgid "Memory Image"
-msgstr "Изображение воспоминания"
 
 #: templates/yandex_map.html:8 templates/yandex_map_popup.html:8
 msgid "Yandex Map Location Selector"
 msgstr "Выбор местоположения на Яндекс Картах"
 
-#~ msgid "Placeholder"
-#~ msgstr "Заглушка"
+#, fuzzy
+#~| msgid "Login"
+#~ msgid "Last Login"
+#~ msgstr "Войти"
+
+#~ msgid "Two-Factor Authentication"
+#~ msgstr "Двухфакторная аутентификация"
+
+#~ msgid "Enabled"
+#~ msgstr "Включено"
+
+#~ msgid "Disabled"
+#~ msgstr "Отключено"
