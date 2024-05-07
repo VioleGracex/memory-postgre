@@ -133,8 +133,6 @@ msgid "A place to store and cherish your memories of visited locations."
 msgstr "Место для хранения и дорогих воспоминаний о посещенных местах."
 
 #: templates/home.html:47
-#, fuzzy
-#| msgid "Login with VK"
 msgid "Login via VKontakte"
 msgstr "Войти с помощью VK"
 
