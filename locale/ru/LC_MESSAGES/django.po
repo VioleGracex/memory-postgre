@@ -147,10 +147,8 @@ msgid "Edit Memory"
 msgstr "Редактировать воспоминание"
 
 #: templates/memory.html:36
-#, fuzzy
-#| msgid "Welcome to MemoryMap"
 msgid "Delete Memory"
-msgstr "Добро пожаловать в MemoryMap"
+msgstr "Удалить воспоминаний"
 
 #: templates/memory.html:47 templates/profile.html:89
 #: templates/user_feed.html:38
@@ -196,11 +194,9 @@ msgstr "Метод регистрации"
 
 #: templates/profile.html:119
 msgid "Email Verified"
-msgstr "почта подтверждена"
+msgstr "Почта подтверждена"
 
 #: templates/profile.html:123
-#, fuzzy
-#| msgid "Profile Picture"
 msgid "Profile Type"
 msgstr "Тип профиля"
 
@@ -233,10 +229,8 @@ msgid "Cancel Changes"
 msgstr "Отменить изменения"
 
 #: templates/profile.html:165
-#, fuzzy
-#| msgid "Add to Feed"
 msgid "Back to Feed"
-msgstr "Добавить в ленту"
+msgstr "Вернуться к ленте"
 
 #: templates/user_feed.html:13
 msgid "User Feed"
