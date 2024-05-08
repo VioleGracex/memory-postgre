@@ -6,12 +6,12 @@ from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(max_length=150, label=_("Username"), widget=forms.TextInput(attrs={'placeholder': _('Username')}))
-    email = forms.EmailField(label=_("Email"), widget=forms.EmailInput(attrs={'placeholder': _('Email')}))
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput(attrs={'placeholder': _('Password')}))
-    confirm_password = forms.CharField(label=_("Confirm Password"), widget=forms.PasswordInput(attrs={'placeholder': _('Confirm Password')}))
-    first_name = forms.CharField(max_length=30, label=_("First Name"), widget=forms.TextInput(attrs={'placeholder': _('First Name')}))
-    last_name = forms.CharField(max_length=30, label=_("Last Name"), widget=forms.TextInput(attrs={'placeholder': _('Last Name')}))
+    username = forms.CharField(max_length=150, label=_("Username"), widget=forms.TextInput(attrs={'placeholder': _('Username'), 'class': 'form-control'}))
+    email = forms.EmailField(label=_("Email"), widget=forms.EmailInput(attrs={'placeholder': _('Email'), 'class': 'form-control'}))
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput(attrs={'placeholder': _('Password'), 'class': 'form-control'}))
+    confirm_password = forms.CharField(label=_("Confirm Password"), widget=forms.PasswordInput(attrs={'placeholder': _('Confirm Password'), 'class': 'form-control'}))
+    first_name = forms.CharField(max_length=30, label=_("First Name"), widget=forms.TextInput(attrs={'placeholder': _('First Name'), 'class': 'form-control'}))
+    last_name = forms.CharField(max_length=30, label=_("Last Name"), widget=forms.TextInput(attrs={'placeholder': _('Last Name'), 'class': 'form-control'}))
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
