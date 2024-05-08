@@ -26,7 +26,7 @@ class TestViews(TestCase):
         
         # Check if the registration redirects to the login page (status code 302)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('loginpage'))
+        self.assertRedirects(response, reverse('login_page'))
 
     def test_login_view(self):
         # Assuming your login view is associated with a URL named 'loginpage'
@@ -34,7 +34,7 @@ class TestViews(TestCase):
             'username': 'testuser',
             'password': 'testpassword',
         }
-        response = self.client.post(reverse('loginpage'), data=data)
+        response = self.client.post(reverse('login_page'), data=data)
         self.assertEqual(response.status_code, 200)  # Assuming successful login returns status code 200
         # Add more assertions to test the behavior of logging in
 

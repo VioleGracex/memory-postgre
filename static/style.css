@@ -22,6 +22,9 @@ body {
 /* #endregion */
 /* #region auth */
 
+.form_container {
+    margin-top: 20px;
+}
 .login_btn {
     width: 100%;
     background: #4299e1; 
@@ -227,6 +230,9 @@ body {
     color: #666;
 }
 
+.memory-text.with-text {
+    background-color: transparent; /* Remove background color when there's text */
+} 
 .media {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));

@@ -6,7 +6,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth.decorators import login_required  # Import the login_required decorator
+from django.contrib.auth.decorators import login_required
+
+from .forms import LoginForm, RegistrationForm  # Import the login_required decorator
 from .models import CustomUser, Memory, UserFeed
 from django.contrib.auth import get_user_model
 from datetime import datetime
@@ -26,19 +28,18 @@ from django.views.decorators.http import require_POST
 def home(request):
     return render(request, 'home.html')
 
-def loginpage(request, errors=None):
-    context = {'errors': errors}
-    return render(request, 'accounts/login.html', context)
-
 def register_page(request, errors=None):
-    context = {'errors': errors} if errors else {}
+    form = RegistrationForm()  # Create an instance of the RegistrationForm
+    context = {'form': form, 'errors': errors} if errors else {'form': form}
     return render(request, 'accounts/reg.html', context)
 
 def admin(request):
     return render(request, 'admin.html')
 
-def login_page(request):
-    return render(request, 'accounts/login.html')
+def login_page(request, errors=None):
+    form = LoginForm()  # Create an instance of the LoginForm
+    context = {'form': form, 'errors': errors} if errors else {'form': form}
+    return render(request, 'accounts/login.html', context)
 
 
 @login_required
@@ -77,77 +78,35 @@ User = get_user_model()
 
 def register_user(request):
     if request.method == 'POST':
-        username = request.POST.get('username', '')
-        email = request.POST.get('email', '')
-        password = request.POST.get('password', '')
-        confirm_password = request.POST.get('confirm_password', '')
-        first_name = request.POST.get('first_name', '')
-        last_name = request.POST.get('last_name', '')
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Registration successful. You can now log in.")
+            return redirect('loginp_age')
+    else:
+        form = RegistrationForm()
 
-        errors = []
-
-        # Validate the password
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            errors.extend(e.messages)
-
-        # Check if the password is the same as the username
-        if password == username:
-            errors.append("Password cannot be the same as the username.")
-
-        if password != confirm_password:
-            errors.append("Passwords do not match.")
-
-        # Check if the username already exists
-        if User.objects.filter(username=username).exists():
-            errors.append("Username already exists. Please choose a different username.")
-            return redirect('loginpage')
-        if errors:
-            # If there are errors, render the registration page with the error messages
-            return register_page(request, errors)
-
-        try:
-            # Create the default User
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
-
-            # Create the associated CustomUser object
-            custom_user = CustomUser.objects.create(
-                user=user,
-                bio='', 
-                registration_method='normal',  
-                email_verified=False,  
-                two_factor_authentication=False,  
-                # Add other fields as needed
-            )
-
-            # Redirect the user to the login page
-            return redirect('loginpage')
-        except Exception as e:
-            # If an error occurs during user creation, display the error message
-            errors.append(str(e))
-            return register_page(request, errors)
-
-    # If the request method is not POST, render the registration page
-    return register_page(request, errors)
+    return render(request, 'accounts/reg.html', {'form': form})
 
 
 def login_user(request):
     errors = []
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            custom_user = get_object_or_404(CustomUser, user=request.user)
-            return redirect('user_specific_feed', user_id=custom_user.id)
-        else:
-            errors.append("Invalid username or password. Please try again.")
-    return loginpage(request, errors)
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                custom_user = get_object_or_404(CustomUser, user=request.user)
+                return redirect('user_specific_feed', user_id=custom_user.id)
+            else:
+                errors.append("Invalid username or password. Please try again.")
+    else:
+        form = LoginForm()
+
+    return login_page(request, errors, form=form)
 
 # Define the custom pipeline function
 def social_auth_user(request, sociallogin, **kwargs):
@@ -266,8 +225,7 @@ def add_to_profile(request):
     return redirect('user_specific_feed', user_id=custom_user.id)
 
 
-from django.core.exceptions import ValidationError
-
+@login_required
 def edit_memory(request, memory_id):
     if request.method == 'POST':
         current_user = request.user
