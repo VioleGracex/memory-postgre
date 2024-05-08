@@ -1,20 +1,16 @@
 # views.py
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-from .models import CustomUser, Memory, UserFeed, Image ,Video
+from .models import CustomUser, Memory, UserFeed
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from datetime import datetime
 from django.utils.translation import gettext as _
-from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 #region Utility Functions
@@ -34,7 +30,7 @@ def loginpage(request, errors=None):
     context = {'errors': errors}
     return render(request, 'accounts/login.html', context)
 
-def regpage(request, errors=None):
+def register_page(request, errors=None):
     context = {'errors': errors} if errors else {}
     return render(request, 'accounts/reg.html', context)
 
@@ -109,7 +105,7 @@ def register_user(request):
             return redirect('loginpage')
         if errors:
             # If there are errors, render the registration page with the error messages
-            return regpage(request, errors)
+            return register_page(request, errors)
 
         try:
             # Create the default User
@@ -133,10 +129,10 @@ def register_user(request):
         except Exception as e:
             # If an error occurs during user creation, display the error message
             errors.append(str(e))
-            return regpage(request, errors)
+            return register_page(request, errors)
 
     # If the request method is not POST, render the registration page
-    return regpage(request, errors)
+    return register_page(request, errors)
 
 
 def login_user(request):
