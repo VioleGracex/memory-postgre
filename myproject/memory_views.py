@@ -1,16 +1,8 @@
-
-from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-
-from .forms import LoginForm, RegistrationForm  # Import the login_required decorator
 from .models import CustomUser, Memory, UserFeed
-from django.contrib.auth import get_user_model
 from datetime import datetime
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
