@@ -85,4 +85,9 @@ def logout_user(request):
     logout(request)
     return redirect('home')  # Redirect to the home page after logout
     
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+    
 #endregion

@@ -41,10 +41,10 @@ urlpatterns =i18n_patterns(
     path('accounts/social-auth/', views.social_auth_user, name='social_auth_user'),
     path('delete-memory/<int:memory_id>/', views.delete_memory, name='delete_memory'),
     path('edit-memory/<int:memory_id>/', views.edit_memory, name='edit_memory'),
-     # Add these new paths for privacy, terms, and contact pages
-    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
-    path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
-    path('contact-us/', views.contact_us, name='contact_us'),
+    
+     path('privacy-policy/', views.page_view, {'page_name': 'privacy_policy'}, name='privacy_policy'),
+    path('terms-of-service/', views.page_view, {'page_name': 'terms_of_service'}, name='terms_of_service'),
+    path('contact-us/', views.page_view, {'page_name': 'contact_us'}, name='contact_us'),
 )+ static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT

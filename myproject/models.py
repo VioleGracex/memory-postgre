@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+import uuid
 
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE , default=None)
@@ -20,55 +21,24 @@ class CustomUser(models.Model):
     def __str__(self):
         return self.user.username
 
+# Memory Model using ForeignKey
 class Memory(models.Model):
-    id = models.AutoField(primary_key=True)  # Add an ID field as AutoField
     custom_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(CustomUser, related_name='memory_likes')
     comments = models.ManyToManyField('Comment', related_name='memory_comments')
-    created_at = models.DateTimeField(default=timezone.now)  # Set default value here
-    updated_at = models.DateTimeField(auto_now=True)
-    images = models.ManyToManyField('Image', related_name='memory_images')
-    videos = models.ManyToManyField('Video', related_name='memory_videos')
-
-    def delete_memory(self):
-        # Delete the memory instance
-        self.delete()
-        # Save any changes
-        self.custom_user.save()
-    
-    def __str__(self):
-        return f"Memory by {self.user.username} at {self.created_at}"
-
 
 class Image(models.Model):
-    memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+    memory = models.ForeignKey(Memory, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='memory_images/')
-    image_id = models.CharField(max_length=50, unique=True, editable=False)
-
-    def save(self, *args, **kwargs):
-        if not self.image_id:
-            # Generate a unique image ID based on the current timestamp
-            timestamp = timezone.now().timestamp()
-            self.image_id = f"IMG-{int(timestamp * 1000)}"
-
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Image for Memory: {self.memory.id} (ID: {self.image_id})"
-
-        return f"Image for Memory: {self.memory.id} (ID: {self.image_id})"
-
-
-
+    image_id = models.CharField(max_length=50, unique=True, editable=False, default=uuid.uuid4)
 
 class Video(models.Model):
-    memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+    memory = models.ForeignKey(Memory, on_delete=models.CASCADE, related_name='videos')
     video = models.FileField(upload_to='memory_videos/')
-
-    def __str__(self):
-        return f"Video for Memory: {self.memory.id}"
 
 
 class Comment(models.Model):
